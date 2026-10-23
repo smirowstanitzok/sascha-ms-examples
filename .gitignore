@@ -1,0 +1,9 @@
+node_modules/
+dist/
+cdk.out/
+*.log
+.env
+.env.*
+!.env.example
+replay-result.json
+.DS_Store

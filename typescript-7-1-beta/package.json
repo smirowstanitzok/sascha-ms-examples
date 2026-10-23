@@ -1,0 +1,13 @@
+{
+  "name": "typescript-7-1-beta",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck:beta": "npx -y -p typescript@beta tsc --noEmit --extendedDiagnostics",
+    "build:beta": "npx -y -p typescript@beta tsc",
+    "check:runtime": "node scripts/es2026-check.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}

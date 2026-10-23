@@ -1,0 +1,13 @@
+{
+  "name": "claude-code-hooks-guardrails",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/hooks.test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.0",
+    "typescript": "^5.6.0"
+  }
+}

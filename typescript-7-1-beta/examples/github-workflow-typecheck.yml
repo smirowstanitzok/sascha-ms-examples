@@ -1,0 +1,29 @@
+name: Typecheck
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typescript: ["installed", "beta"]
+    # The beta may turn red without blocking the build
+    continue-on-error: ${{ matrix.typescript == 'beta' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typecheck with installed version
+        if: matrix.typescript == 'installed'
+        run: npx tsc --noEmit
+      - name: Typecheck with TypeScript beta
+        if: matrix.typescript == 'beta'
+        run: npx -y -p typescript@beta tsc --noEmit

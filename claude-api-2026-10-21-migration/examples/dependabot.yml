@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      # Temporary until the migration – link the ticket!
+      - dependency-name: "@anthropic-ai/*"
+        update-types: ["version-update:semver-major"]

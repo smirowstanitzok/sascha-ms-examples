@@ -1,0 +1,14 @@
+{
+  "name": "secure-mcp-servers",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && node --test dist/*.test.js",
+    "audit": "node dist/audit-mcp.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
