@@ -1,0 +1,174 @@
+# serverless.yml
+service: credit-approval
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 256
+  timeout: 10
+  environment:
+    TABLE_NAME: !Ref ApprovalsTable
+    TOPIC_ARN: !Ref ApprovalTopic
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: dynamodb:PutItem
+          Resource: !GetAtt ApprovalsTable.Arn
+        - Effect: Allow
+          Action: sns:Publish
+          Resource: !Ref ApprovalTopic
+
+functions:
+  requestApproval:
+    handler: src/request-approval.handler
+
+  decide:
+    handler: src/decide.handler
+    # Separate role: only this function may resume workflows
+    role: DecideRole
+    url:
+      authorizer: aws_iam
+
+  applyCredit:
+    handler: src/apply-credit.handler
+
+resources:
+  Resources:
+    ApprovalsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: approvalId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: approvalId
+            KeyType: HASH
+        TimeToLiveSpecification:
+          AttributeName: expiresAt
+          Enabled: true
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+
+    ApprovalTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Credit approvals
+
+    ApproverEmail:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: !Ref ApprovalTopic
+        Protocol: email
+        Endpoint: ${param:approverEmail}
+
+    DecideRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action: sts:AssumeRole
+        ManagedPolicyArns:
+          - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        Policies:
+          - PolicyName: decide
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:GetItem
+                    - dynamodb:UpdateItem
+                  Resource: !GetAtt ApprovalsTable.Arn
+                - Effect: Allow
+                  # SendTaskSuccess cannot be scoped to a resource
+                  Action: states:SendTaskSuccess
+                  Resource: '*'
+
+    CreditApprovalRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: states.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: credit-approval
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: lambda:InvokeFunction
+                  Resource:
+                    - !GetAtt RequestApprovalLambdaFunction.Arn
+                    - !GetAtt ApplyCreditLambdaFunction.Arn
+                - Effect: Allow
+                  Action: sns:Publish
+                  Resource: !Ref ApprovalTopic
+
+    CreditApprovalStateMachine:
+      Type: AWS::StepFunctions::StateMachine
+      Properties:
+        StateMachineType: STANDARD
+        RoleArn: !GetAtt CreditApprovalRole.Arn
+        Definition: ${file(./statemachine/credit-approval.asl.json)}
+        DefinitionSubstitutions:
+          RequestApprovalArn: !GetAtt RequestApprovalLambdaFunction.Arn
+          ApplyCreditArn: !GetAtt ApplyCreditLambdaFunction.Arn
+          TopicArn: !Ref ApprovalTopic
+
+    # Attach this policy to the role of the people allowed to approve
+    ApproverPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        Description: Can approve or reject credits
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: lambda:InvokeFunctionUrl
+              Resource: !GetAtt DecideLambdaFunction.Arn
+              Condition:
+                StringEquals:
+                  lambda:FunctionUrlAuthType: AWS_IAM
+            - Effect: Allow
+              Action: lambda:InvokeFunction
+              Resource: !GetAtt DecideLambdaFunction.Arn
+              Condition:
+                Bool:
+                  lambda:InvokedViaFunctionUrl: 'true'
+
+    # And this one to the AI agent's role: start and read status, nothing else
+    AgentPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        Description: Can start credit requests and read their status
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: states:StartExecution
+              Resource: !Ref CreditApprovalStateMachine
+            - Effect: Allow
+              Action: states:DescribeExecution
+              Resource: !Sub
+                - 'arn:${AWS::Partition}:states:${AWS::Region}:${AWS::AccountId}:execution:${Name}:*'
+                - Name: !GetAtt CreditApprovalStateMachine.Name
+
+  Outputs:
+    StateMachineArn:
+      Value: !Ref CreditApprovalStateMachine
+    ApproverPolicyArn:
+      Value: !Ref ApproverPolicy
+    AgentPolicyArn:
+      Value: !Ref AgentPolicy
