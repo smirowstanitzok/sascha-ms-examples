@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`webhook-receiver-lambda`](./webhook-receiver-lambda) | Lambda · DynamoDB · SQS · CDK | [Receiving webhooks with Lambda: signatures, duplicates, SQS](https://sascha-ms.de/en/receiving-webhooks-lambda) · [DE](https://sascha-ms.de/2026/1574-webhooks-empfangen-lambda) |
 | [`claude-api-2026-10-21-migration`](./claude-api-2026-10-21-migration) | AI · TypeScript | [Claude API 2026-10-21: Migrating to the New SDK](https://sascha-ms.de/en/claude-api-2026-10-21-migration-new-sdk) · [DE](https://sascha-ms.de/2026/352-claude-api-2026-10-21-migration) |
 | [`secure-mcp-servers`](./secure-mcp-servers) | AI · Security · TypeScript | [Connecting MCP Servers Securely: Lessons from OpenCode](https://sascha-ms.de/en/secure-mcp-servers-opencode-lessons) · [DE](https://sascha-ms.de/2026/358-mcp-server-sicher-anbinden-opencode) |
 | [`claude-code-hooks-guardrails`](./claude-code-hooks-guardrails) | AI · Claude Code | [Claude Code Hooks: Guardrails for Your AI Agent](https://sascha-ms.de/en/claude-code-hooks-guardrails) · [DE](https://sascha-ms.de/2026/213-claude-code-hooks-leitplanken) |
