@@ -1,0 +1,22 @@
+{
+  "name": "copilot-instructions-check",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:instructions": "tsx scripts/check-instructions.ts",
+    "test": "vitest run --dir test",
+    "typecheck": "tsc --noEmit",
+    "check:example": "cd example && tsx ../scripts/check-instructions.ts"
+  },
+  "dependencies": {
+    "picomatch": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/picomatch": "^3.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.0"
+  }
+}
