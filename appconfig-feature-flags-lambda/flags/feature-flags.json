@@ -1,0 +1,22 @@
+{
+  "version": "1",
+  "flags": {
+    "sunday-discount": {
+      "name": "Sunday discount",
+      "description": "New pricing rule: discount on all Sunday screenings",
+      "attributes": {
+        "discount-percent": {
+          "constraints": { "type": "number", "minimum": 0, "maximum": 50, "required": true }
+        }
+      }
+    },
+    "sales-stop": {
+      "name": "Sales stop",
+      "description": "Kill switch: temporarily rejects all price requests"
+    }
+  },
+  "values": {
+    "sunday-discount": { "enabled": false, "discount-percent": 20 },
+    "sales-stop": { "enabled": false }
+  }
+}
