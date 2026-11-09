@@ -1,0 +1,40 @@
+# serverless.yml
+service: bike-rental-config
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    PARAM_PREFIX: /bike-rental/${sls:stage}
+    # Resolved once at deploy time and baked into the function
+    LOG_LEVEL: ${ssm:/bike-rental/${sls:stage}/log-level}
+    # Default cache lifetime for the Powertools Parameters utility (seconds)
+    POWERTOOLS_PARAMETERS_MAX_AGE: '300'
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ssm:GetParameter
+            - ssm:GetParameters
+          Resource: arn:aws:ssm:${aws:region}:${aws:accountId}:parameter/bike-rental/${sls:stage}/*
+        - Effect: Allow
+          Action: kms:Decrypt
+          Resource: '*'
+          Condition:
+            StringEquals:
+              kms:ViaService: ssm.${aws:region}.amazonaws.com
+
+functions:
+  quote:
+    handler: src/handler.quote
+    memorySize: 256
+    timeout: 5
+    events:
+      - httpApi:
+          path: /quote
+          method: get
