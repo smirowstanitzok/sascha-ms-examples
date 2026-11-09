@@ -1,0 +1,129 @@
+{
+  "Comment": "Credit requested by an AI agent with human approval and escalation",
+  "QueryLanguage": "JSONata",
+  "StartAt": "Init",
+  "States": {
+    "Init": {
+      "Type": "Pass",
+      "Assign": { "request": "{% $states.input %}" },
+      "Next": "CheckAmount"
+    },
+    "CheckAmount": {
+      "Type": "Choice",
+      "Choices": [
+        { "Condition": "{% $request.amountCents > 50000 %}", "Next": "AboveAgentLimit" },
+        {
+          "Condition": "{% $request.amountCents <= 2000 %}",
+          "Assign": { "approval": { "decision": "approved", "decidedBy": "auto", "comment": "below the approval threshold" } },
+          "Next": "ApplyCredit"
+        }
+      ],
+      "Default": "AskTeam"
+    },
+    "AskTeam": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+      "Arguments": {
+        "FunctionName": "${RequestApprovalArn}",
+        "Payload": {
+          "taskToken": "{% $states.context.Task.Token %}",
+          "stage": "team",
+          "executionId": "{% $states.context.Execution.Id %}",
+          "request": "{% $request %}"
+        }
+      },
+      "TimeoutSeconds": 14400,
+      "Assign": { "approval": "{% $states.result %}" },
+      "Retry": [
+        {
+          "ErrorEquals": ["Lambda.ServiceException", "Lambda.TooManyRequestsException", "Lambda.SdkClientException"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2,
+          "JitterStrategy": "FULL"
+        }
+      ],
+      "Catch": [{ "ErrorEquals": ["States.Timeout"], "Next": "AskLead" }],
+      "Next": "CheckDecision"
+    },
+    "AskLead": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+      "Arguments": {
+        "FunctionName": "${RequestApprovalArn}",
+        "Payload": {
+          "taskToken": "{% $states.context.Task.Token %}",
+          "stage": "lead",
+          "executionId": "{% $states.context.Execution.Id %}",
+          "request": "{% $request %}"
+        }
+      },
+      "TimeoutSeconds": 72000,
+      "Assign": { "approval": "{% $states.result %}" },
+      "Retry": [
+        {
+          "ErrorEquals": ["Lambda.ServiceException", "Lambda.TooManyRequestsException", "Lambda.SdkClientException"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2,
+          "JitterStrategy": "FULL"
+        }
+      ],
+      "Catch": [{ "ErrorEquals": ["States.Timeout"], "Next": "NotifyExpired" }],
+      "Next": "CheckDecision"
+    },
+    "CheckDecision": {
+      "Type": "Choice",
+      "Choices": [{ "Condition": "{% $approval.decision = 'approved' %}", "Next": "ApplyCredit" }],
+      "Default": "Rejected"
+    },
+    "ApplyCredit": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Arguments": {
+        "FunctionName": "${ApplyCreditArn}",
+        "Payload": { "request": "{% $request %}", "approval": "{% $approval %}" }
+      },
+      "Output": "{% $states.result.Payload %}",
+      "Retry": [
+        {
+          "ErrorEquals": ["Lambda.ServiceException", "Lambda.TooManyRequestsException", "Lambda.SdkClientException"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2,
+          "JitterStrategy": "FULL"
+        }
+      ],
+      "End": true
+    },
+    "Rejected": {
+      "Type": "Succeed",
+      "Output": {
+        "status": "rejected",
+        "orderId": "{% $request.orderId %}",
+        "decidedBy": "{% $approval.decidedBy %}",
+        "comment": "{% $approval.comment %}"
+      }
+    },
+    "NotifyExpired": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Arguments": {
+        "TopicArn": "${TopicArn}",
+        "Subject": "Approval expired",
+        "Message": "{% 'Nobody decided on order ' & $request.orderId & ' in time. No credit was applied.' %}"
+      },
+      "Next": "Expired"
+    },
+    "Expired": {
+      "Type": "Fail",
+      "Error": "ApprovalExpired",
+      "Cause": "Nobody decided within the deadline."
+    },
+    "AboveAgentLimit": {
+      "Type": "Fail",
+      "Error": "AmountAboveAgentLimit",
+      "Cause": "The agent must not request credits above 500 euros."
+    }
+  }
+}
