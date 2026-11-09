@@ -1,0 +1,89 @@
+# serverless.yml
+service: bike-rental-key-rotation
+frameworkVersion: '4'
+
+params:
+  default:
+    # Create the secret beforehand with the CLI (see step 6) so the
+    # initial key never ends up in the template or in CloudFormation.
+    secretName: bike-rental/lock-api
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  logRetentionInDays: 30
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - secretsmanager:DescribeSecret
+            - secretsmanager:GetSecretValue
+            - secretsmanager:PutSecretValue
+            - secretsmanager:UpdateSecretVersionStage
+          Resource: arn:aws:secretsmanager:${aws:region}:${aws:accountId}:secret:${param:secretName}-*
+        - Effect: Allow
+          Action: secretsmanager:GetRandomPassword
+          Resource: '*'
+
+functions:
+  rotateLockApiKey:
+    handler: src/rotate.handler
+    description: Rotates the API key for the lock API
+    timeout: 30
+    memorySize: 256
+
+resources:
+  Resources:
+    # Secrets Manager may invoke the function, but only from this account.
+    RotationInvokePermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName: !GetAtt RotateLockApiKeyLambdaFunction.Arn
+        Action: lambda:InvokeFunction
+        Principal: secretsmanager.amazonaws.com
+        SourceAccount: !Ref AWS::AccountId
+
+    LockApiKeyRotation:
+      Type: AWS::SecretsManager::RotationSchedule
+      DependsOn: RotationInvokePermission
+      Properties:
+        SecretId: ${param:secretName}
+        RotationLambdaARN: !GetAtt RotateLockApiKeyLambdaFunction.Arn
+        RotateImmediatelyOnUpdate: true
+        RotationRules:
+          # Every first Tuesday of the month between 02:00 and 04:00 UTC
+          ScheduleExpression: cron(0 2 ? * TUE#1 *)
+          Duration: 2h
+
+    # Notification when a rotation fails
+    RotationAlarmTopic:
+      Type: AWS::SNS::Topic
+
+    RotationFailedRule:
+      Type: AWS::Events::Rule
+      Properties:
+        EventPattern:
+          source: [aws.secretsmanager]
+          detail-type: [AWS Service Event via CloudTrail]
+          detail:
+            eventName: [RotationFailed, RotationAbandoned]
+        Targets:
+          - Arn: !Ref RotationAlarmTopic
+            Id: rotation-alarm
+
+    RotationAlarmTopicPolicy:
+      Type: AWS::SNS::TopicPolicy
+      Properties:
+        Topics: [!Ref RotationAlarmTopic]
+        PolicyDocument:
+          Statement:
+            - Effect: Allow
+              Principal: { Service: events.amazonaws.com }
+              Action: sns:Publish
+              Resource: !Ref RotationAlarmTopic
+              Condition:
+                ArnEquals:
+                  aws:SourceArn: !GetAtt RotationFailedRule.Arn

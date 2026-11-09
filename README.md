@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`secrets-manager-rotation`](./secrets-manager-rotation) | AWS Lambda · Secrets Manager · Serverless Framework | [Secrets Manager Rotation with Lambda for API Keys](https://sascha-ms.de/en/secrets-manager-rotation-lambda-api-keys) · [DE](https://sascha-ms.de/2026/1724-secrets-manager-rotation-lambda) |
 | [`webhook-receiver-lambda`](./webhook-receiver-lambda) | Lambda · DynamoDB · SQS · CDK | [Receiving webhooks with Lambda: signatures, duplicates, SQS](https://sascha-ms.de/en/receiving-webhooks-lambda) · [DE](https://sascha-ms.de/2026/1574-webhooks-empfangen-lambda) |
 | [`claude-api-2026-10-21-migration`](./claude-api-2026-10-21-migration) | AI · TypeScript | [Claude API 2026-10-21: Migrating to the New SDK](https://sascha-ms.de/en/claude-api-2026-10-21-migration-new-sdk) · [DE](https://sascha-ms.de/2026/352-claude-api-2026-10-21-migration) |
 | [`secure-mcp-servers`](./secure-mcp-servers) | AI · Security · TypeScript | [Connecting MCP Servers Securely: Lessons from OpenCode](https://sascha-ms.de/en/secure-mcp-servers-opencode-lessons) · [DE](https://sascha-ms.de/2026/358-mcp-server-sicher-anbinden-opencode) |
