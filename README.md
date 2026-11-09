@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`serverless-template-tests`](./serverless-template-tests) | Serverless Framework · Vitest · CloudFormation | [Testing the Serverless Framework with Vitest](https://sascha-ms.de/en/testing-serverless-framework-vitest) · [DE](https://sascha-ms.de/2026/2460-serverless-framework-testen) |
 | [`secrets-manager-rotation`](./secrets-manager-rotation) | AWS Lambda · Secrets Manager · Serverless Framework | [Secrets Manager Rotation with Lambda for API Keys](https://sascha-ms.de/en/secrets-manager-rotation-lambda-api-keys) · [DE](https://sascha-ms.de/2026/1724-secrets-manager-rotation-lambda) |
 | [`webhook-receiver-lambda`](./webhook-receiver-lambda) | Lambda · DynamoDB · SQS · CDK | [Receiving webhooks with Lambda: signatures, duplicates, SQS](https://sascha-ms.de/en/receiving-webhooks-lambda) · [DE](https://sascha-ms.de/2026/1574-webhooks-empfangen-lambda) |
 | [`human-approval-step-functions`](./human-approval-step-functions) | Step Functions · AI agents · TypeScript | [Human in the loop for AI agents with Step Functions](https://sascha-ms.de/en/human-loop-ai-agents-step-functions) · [DE](https://sascha-ms.de/2026/1608-human-in-the-loop-step-functions) |

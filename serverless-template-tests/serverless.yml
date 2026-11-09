@@ -1,0 +1,75 @@
+# serverless.yml
+service: bike-rental
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 256
+  timeout: 10
+  logRetentionInDays: 14
+  environment:
+    RENTALS_TABLE: ${self:service}-${sls:stage}-rentals
+    INVOICE_QUEUE_URL: !Ref InvoiceQueue
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+          Resource: !GetAtt RentalsTable.Arn
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+          Resource: !GetAtt InvoiceQueue.Arn
+
+params:
+  prod:
+    deletionPolicy: Retain
+    maxReceiveCount: 5
+  default:
+    deletionPolicy: Delete
+    maxReceiveCount: 3
+
+functions:
+  startRental:
+    handler: src/start-rental.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /rentals
+
+resources:
+  Resources:
+    RentalsTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: ${param:deletionPolicy}
+      UpdateReplacePolicy: ${param:deletionPolicy}
+      Properties:
+        TableName: ${self:service}-${sls:stage}-rentals
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: rentalId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: rentalId
+            KeyType: HASH
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+
+    InvoiceQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${sls:stage}-invoices
+        VisibilityTimeout: 60
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt InvoiceDeadLetterQueue.Arn
+          maxReceiveCount: ${param:maxReceiveCount}
+
+    InvoiceDeadLetterQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${sls:stage}-invoices-dlq
+        MessageRetentionPeriod: 1209600

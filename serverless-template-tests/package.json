@@ -1,0 +1,20 @@
+{
+  "name": "serverless-template-tests",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Test the CloudFormation template of a serverless.yml with Vitest",
+  "scripts": {
+    "test": "vitest run",
+    "test:osls": "SLS_CLI=osls vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.164",
+    "@types/node": "^22.20.5",
+    "osls": "4.6.0",
+    "serverless": "4.46.0",
+    "typescript": "5.9.3",
+    "vitest": "5.1.0"
+  }
+}
