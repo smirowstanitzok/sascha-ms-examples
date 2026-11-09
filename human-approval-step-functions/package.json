@@ -1,0 +1,26 @@
+{
+  "name": "human-approval-step-functions",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "validate": "asl-validator --json-path statemachine/credit-approval.asl.json"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1161.0",
+    "@aws-sdk/client-sfn": "^3.1161.0",
+    "@aws-sdk/client-sns": "^3.1161.0",
+    "@aws-sdk/lib-dynamodb": "^3.1161.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^24.0.0",
+    "asl-validator": "^4.0.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "jsonata": "^2.2.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
