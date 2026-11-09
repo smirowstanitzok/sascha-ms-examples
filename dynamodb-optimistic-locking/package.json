@@ -1,0 +1,28 @@
+{
+  "name": "dynamodb-optimistic-locking",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "synth": "cdk synth"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1164.0",
+    "@aws-sdk/lib-dynamodb": "^3.1164.0",
+    "@aws-sdk/util-dynamodb": "^3.996.9"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^24.0.0",
+    "aws-cdk": "^2.1148.0",
+    "aws-cdk-lib": "^2.275.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "constructs": "^10.8.1",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
