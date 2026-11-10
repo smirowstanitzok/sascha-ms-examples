@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`cloudwatch-retention-policy`](./cloudwatch-retention-policy) | CloudWatch Logs · AWS CDK · TypeScript | [CloudWatch Logs retention policy for the whole account](https://sascha-ms.de/en/cloudwatch-logs-retention-policy) · [DE](https://sascha-ms.de/2026/2527-cloudwatch-logs-aufbewahrung) |
 | [`dynamodb-optimistic-locking`](./dynamodb-optimistic-locking) | DynamoDB · AWS CDK · TypeScript | [DynamoDB optimistic locking: version numbers with Lambda](https://sascha-ms.de/en/dynamodb-optimistic-locking) · [DE](https://sascha-ms.de/2026/2473-dynamodb-optimistic-locking) |
 | [`serverless-template-tests`](./serverless-template-tests) | Serverless Framework · Vitest · CloudFormation | [Testing the Serverless Framework with Vitest](https://sascha-ms.de/en/testing-serverless-framework-vitest) · [DE](https://sascha-ms.de/2026/2460-serverless-framework-testen) |
 | [`secrets-manager-rotation`](./secrets-manager-rotation) | AWS Lambda · Secrets Manager · Serverless Framework | [Secrets Manager Rotation with Lambda for API Keys](https://sascha-ms.de/en/secrets-manager-rotation-lambda-api-keys) · [DE](https://sascha-ms.de/2026/1724-secrets-manager-rotation-lambda) |
