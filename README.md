@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`claude-fable-5-2-migration`](./claude-fable-5-2-migration) | Claude API · Anthropic SDK · Vitest · TypeScript | [Claude Fable 5.2 migration for TypeScript backends](https://sascha-ms.de/en/claude-fable-5-2-migration-typescript) · [DE](https://sascha-ms.de/2026/2564-claude-fable-5-2-migration) |
 | [`cdk-nag-v3-vitest`](./cdk-nag-v3-vitest) | AWS CDK · cdk-nag · Vitest · TypeScript | [cdk-nag v3: Security Checks in CDK Tests with Vitest](https://sascha-ms.de/en/cdk-nag-v3-vitest) · [DE](https://sascha-ms.de/2026/2554-cdk-nag-v3-vitest) |
 | [`dynamodb-transactions`](./dynamodb-transactions) | DynamoDB · Lambda · Serverless Framework · TypeScript | [DynamoDB transactions: TransactWriteItems with Lambda](https://sascha-ms.de/en/dynamodb-transactions-transactwriteitems-lambda) · [DE](https://sascha-ms.de/2026/2541-dynamodb-transaktionen) |
 | [`cloudwatch-retention-policy`](./cloudwatch-retention-policy) | CloudWatch Logs · AWS CDK · TypeScript | [CloudWatch Logs retention policy for the whole account](https://sascha-ms.de/en/cloudwatch-logs-retention-policy) · [DE](https://sascha-ms.de/2026/2527-cloudwatch-logs-aufbewahrung) |

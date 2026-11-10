@@ -1,0 +1,21 @@
+{
+  "name": "claude-fable-5-2-migration",
+  "version": "1.0.0",
+  "description": "Claude Fable 5.2 migration helpers for TypeScript backends",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "example": "node --experimental-strip-types src/example.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.7.0"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "private": true,
+  "license": "MIT"
+}
