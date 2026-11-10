@@ -24,6 +24,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`typescript-7-1-beta`](./typescript-7-1-beta) | TypeScript | [TypeScript 7.1 Beta: What’s New and How to Test It](https://sascha-ms.de/en/typescript-7-1-beta) · [DE](https://sascha-ms.de/2026/114-typescript-7-1-beta-testen) |
 | [`copilot-path-instructions`](./copilot-path-instructions) | GitHub Copilot | [Path-specific Copilot custom instructions: a guide](https://sascha-ms.de/en/path-specific-copilot-custom-instructions) · [DE](https://sascha-ms.de/2026/1735-copilot-custom-instructions-pro-pfad) |
 | [`appconfig-feature-flags-lambda`](./appconfig-feature-flags-lambda) | Serverless · AWS CDK · TypeScript | [AppConfig feature flags in Lambda: safe rollouts](https://sascha-ms.de/en/appconfig-feature-flags-lambda) · [DE](https://sascha-ms.de/2026/1709-appconfig-feature-flags-lambda) |
+| [`uv-lambda-layer`](./uv-lambda-layer) | Serverless · Python · Serverless Framework | [uv for AWS Lambda: Packaging Python Dependencies](https://sascha-ms.de/en/uv-aws-lambda-python-dependencies) |
 
 ## How to use
 

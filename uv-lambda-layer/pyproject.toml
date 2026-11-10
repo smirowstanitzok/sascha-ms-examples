@@ -1,0 +1,20 @@
+# pyproject.toml
+[project]
+name = "bakery-preorder"
+version = "0.1.0"
+description = "Example: packaging a Python Lambda with uv"
+requires-python = ">=3.14"
+dependencies = [
+    "pydantic>=2.12",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
