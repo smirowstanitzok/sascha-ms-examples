@@ -1,0 +1,38 @@
+# examples/deploy-safe.yml
+name: deploy-bike-rental
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write # OIDC instead of stored access keys
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/bike-rental-deploy
+          aws-region: eu-central-1
+
+      - name: Load partner API key and mask it
+        run: |
+          key=$(aws ssm get-parameter --name /bike-rental/partner-api-key \
+            --with-decryption --query Parameter.Value --output text)
+          echo "::add-mask::$key"
+          echo "PARTNER_API_KEY=$key" >> "$GITHUB_ENV"
+
+      - name: Build a derived value and mask it as well
+        env:
+          PARTNER_PASSWORD: ${{ secrets.PARTNER_PASSWORD }}
+        run: |
+          basic=$(printf 'rental:%s' "$PARTNER_PASSWORD" | base64 -w0)
+          echo "::add-mask::$basic"
+          echo "PARTNER_BASIC_AUTH=$basic" >> "$GITHUB_ENV"
+
+      - name: Deploy
+        run: npx serverless deploy --stage prod
