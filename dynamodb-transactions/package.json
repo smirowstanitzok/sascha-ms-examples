@@ -1,0 +1,21 @@
+{
+  "name": "dynamodb-transactions",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DynamoDB transactions with TransactWriteItems, Lambda and the Serverless Framework",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "deploy": "serverless deploy"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1165.0",
+    "@aws-sdk/lib-dynamodb": "^3.1165.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  }
+}

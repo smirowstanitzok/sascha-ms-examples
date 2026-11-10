@@ -1,0 +1,60 @@
+# serverless.yml
+service: bike-rental-transactions
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  memorySize: 512
+  timeout: 10
+  logRetentionInDays: 30
+  environment:
+    TABLE_NAME: !Ref RentalsTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:ConditionCheckItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+          Resource: !GetAtt RentalsTable.Arn
+          Condition:
+            ForAnyValue:StringEquals:
+              dynamodb:EnclosingOperation:
+                - TransactWriteItems
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+          Resource: !GetAtt RentalsTable.Arn
+
+functions:
+  startRental:
+    handler: src/handler.startRental
+    events:
+      - httpApi:
+          method: POST
+          path: /rentals
+  returnRental:
+    handler: src/handler.returnRental
+    events:
+      - httpApi:
+          method: POST
+          path: /rentals/{rentalId}/return
+
+resources:
+  Resources:
+    RentalsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${sls:stage}-rentals
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
