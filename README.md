@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`sqs-dlq-redrive`](./sqs-dlq-redrive) | Serverless · SQS · Serverless Framework · TypeScript | [SQS dead-letter queue: alarm, triage and redrive](https://sascha-ms.de/en/sqs-dead-letter-queue-redrive) · [DE](https://sascha-ms.de/2026/2646-sqs-dead-letter-queue-redrive) |
 | [`actions-log-secret-scan`](./actions-log-secret-scan) | GitHub Actions · Secret scanning · Vitest · TypeScript | [Secrets in GitHub Actions logs: find and prevent leaks](https://sascha-ms.de/en/secrets-github-actions-logs) · [DE](https://sascha-ms.de/2026/2621-github-actions-logs-secrets) |
 | [`claude-fable-5-2-migration`](./claude-fable-5-2-migration) | Claude API · Anthropic SDK · Vitest · TypeScript | [Claude Fable 5.2 migration for TypeScript backends](https://sascha-ms.de/en/claude-fable-5-2-migration-typescript) · [DE](https://sascha-ms.de/2026/2564-claude-fable-5-2-migration) |
 | [`cdk-nag-v3-vitest`](./cdk-nag-v3-vitest) | AWS CDK · cdk-nag · Vitest · TypeScript | [cdk-nag v3: Security Checks in CDK Tests with Vitest](https://sascha-ms.de/en/cdk-nag-v3-vitest) · [DE](https://sascha-ms.de/2026/2554-cdk-nag-v3-vitest) |

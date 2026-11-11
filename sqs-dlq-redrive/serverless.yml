@@ -1,0 +1,94 @@
+# serverless.yml
+service: ticketshop-orders
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-central-1
+  memorySize: 512
+  timeout: 30
+  environment:
+    TICKET_API_URL: ${param:ticketApiUrl, 'https://tickets.example.com/api/issue'}
+
+functions:
+  issueTickets:
+    handler: src/handler.handler
+    events:
+      - sqs:
+          arn: !GetAtt TicketOrdersQueue.Arn
+          batchSize: 10
+          functionResponseType: ReportBatchItemFailures
+
+resources:
+  Resources:
+    TicketOrdersQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${sls:stage}-orders
+        VisibilityTimeout: 180          # 6 x function timeout (30 s)
+        MessageRetentionPeriod: 345600  # 4 days
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt TicketOrdersDlq.Arn
+          maxReceiveCount: 5
+
+    TicketOrdersDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${sls:stage}-orders-dlq
+        MessageRetentionPeriod: 1209600 # 14 days, longer than the source queue
+
+    AlertTopic:
+      Type: AWS::SNS::Topic
+
+    AlertSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: !Ref AlertTopic
+        Protocol: email
+        Endpoint: ${param:alertEmail, 'team@example.com'}
+
+    DlqNotEmptyAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        AlarmName: ${self:service}-${sls:stage}-dlq-not-empty
+        AlarmDescription: Messages in the DLQ. Runbook - peek, fix the cause, start a redrive.
+        Namespace: AWS/SQS
+        MetricName: ApproximateNumberOfMessagesVisible
+        Dimensions:
+          - Name: QueueName
+            Value: !GetAtt TicketOrdersDlq.QueueName
+        Statistic: Maximum
+        Period: 60
+        EvaluationPeriods: 1
+        Threshold: 0
+        ComparisonOperator: GreaterThanThreshold
+        TreatMissingData: notBreaching
+        AlarmActions: [!Ref AlertTopic]
+        OKActions: [!Ref AlertTopic]
+
+    DlqForgottenAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        AlarmName: ${self:service}-${sls:stage}-dlq-forgotten
+        AlarmDescription: Oldest DLQ message older than 3 days. Nobody has taken care of it.
+        Namespace: AWS/SQS
+        MetricName: ApproximateAgeOfOldestMessage
+        Dimensions:
+          - Name: QueueName
+            Value: !GetAtt TicketOrdersDlq.QueueName
+        Statistic: Maximum
+        Period: 300
+        EvaluationPeriods: 1
+        Threshold: 259200
+        ComparisonOperator: GreaterThanThreshold
+        TreatMissingData: notBreaching
+        AlarmActions: [!Ref AlertTopic]
+
+  Outputs:
+    OrdersQueueUrl:
+      Value: !Ref TicketOrdersQueue
+    DlqUrl:
+      Value: !Ref TicketOrdersDlq
+    DlqArn:
+      Value: !GetAtt TicketOrdersDlq.Arn
