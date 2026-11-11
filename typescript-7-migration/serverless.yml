@@ -1,0 +1,27 @@
+# serverless.yml – alternative to the CDK stack (Serverless Framework v4)
+service: bike-rental
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  memorySize: 256
+  timeout: 5
+  logRetentionInDays: 14
+  environment:
+    STATION_NAME: Central Station
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: true
+    # esbuild finds tsconfig.json on its own and resolves "paths" – tsc isn't needed for this
+
+functions:
+  rental:
+    handler: src/rental.handler
+    events:
+      - httpApi:
+          path: /rentals/quote
+          method: post
