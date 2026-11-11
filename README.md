@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`elasticache-vector-search`](./elasticache-vector-search) | ElastiCache Serverless · Valkey · Amazon Bedrock · Lambda · Serverless Framework · TypeScript | [ElastiCache vector search: hybrid search from Lambda](https://sascha-ms.de/en/elasticache-vector-search-lambda) |
 | [`agentcore-web-search-api`](./agentcore-web-search-api) | Amazon Bedrock AgentCore · Lambda · AWS CDK · TypeScript | [AgentCore Web Search API: web search without a gateway](https://sascha-ms.de/en/agentcore-web-search-api) · [DE](https://sascha-ms.de/2026/2659-agentcore-web-search-api) |
 | [`sqs-dlq-redrive`](./sqs-dlq-redrive) | Serverless · SQS · Serverless Framework · TypeScript | [SQS dead-letter queue: alarm, triage and redrive](https://sascha-ms.de/en/sqs-dead-letter-queue-redrive) · [DE](https://sascha-ms.de/2026/2646-sqs-dead-letter-queue-redrive) |
 | [`actions-log-secret-scan`](./actions-log-secret-scan) | GitHub Actions · Secret scanning · Vitest · TypeScript | [Secrets in GitHub Actions logs: find and prevent leaks](https://sascha-ms.de/en/secrets-github-actions-logs) · [DE](https://sascha-ms.de/2026/2621-github-actions-logs-secrets) |

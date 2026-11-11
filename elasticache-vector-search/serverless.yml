@@ -1,0 +1,52 @@
+# serverless.yml
+service: book-search
+frameworkVersion: "4"
+
+build:
+  esbuild: false # we compile with tsc ourselves because GLIDE ships a native library
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: x86_64
+  region: eu-central-1
+  memorySize: 512
+  timeout: 10
+  environment:
+    CACHE_NAME: ${param:cacheName, 'book-search'}
+    CACHE_HOST: ${param:cacheHost}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: elasticache:Connect
+          Resource:
+            - arn:aws:elasticache:${aws:region}:${aws:accountId}:serverlesscache:${param:cacheName, 'book-search'}
+            - arn:aws:elasticache:${aws:region}:${aws:accountId}:user:default.iam-user
+        - Effect: Allow
+          Action: bedrock:InvokeModel
+          Resource: arn:aws:bedrock:${aws:region}::foundation-model/amazon.titan-embed-text-v2:0
+
+package:
+  patterns:
+    - "!**"
+    - dist/src/**
+    - node_modules/**
+    - "!node_modules/.bin/**"
+    - "!node_modules/typescript/**"
+    - "!node_modules/vitest/**"
+    - "!node_modules/@vitest/**"
+    - "!node_modules/vite/**"
+    - "!node_modules/esbuild/**"
+    - "!node_modules/@esbuild/**"
+    - "!node_modules/tsx/**"
+    - "!node_modules/rollup/**"
+    - "!node_modules/@rollup/**"
+
+functions:
+  search:
+    handler: dist/src/handler.handler
+    events:
+      - httpApi:
+          method: GET
+          path: /search
