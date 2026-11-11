@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`agentcore-web-search-api`](./agentcore-web-search-api) | Amazon Bedrock AgentCore · Lambda · AWS CDK · TypeScript | [AgentCore Web Search API: web search without a gateway](https://sascha-ms.de/en/agentcore-web-search-api) · [DE](https://sascha-ms.de/2026/2659-agentcore-web-search-api) |
 | [`sqs-dlq-redrive`](./sqs-dlq-redrive) | Serverless · SQS · Serverless Framework · TypeScript | [SQS dead-letter queue: alarm, triage and redrive](https://sascha-ms.de/en/sqs-dead-letter-queue-redrive) · [DE](https://sascha-ms.de/2026/2646-sqs-dead-letter-queue-redrive) |
 | [`actions-log-secret-scan`](./actions-log-secret-scan) | GitHub Actions · Secret scanning · Vitest · TypeScript | [Secrets in GitHub Actions logs: find and prevent leaks](https://sascha-ms.de/en/secrets-github-actions-logs) · [DE](https://sascha-ms.de/2026/2621-github-actions-logs-secrets) |
 | [`claude-fable-5-2-migration`](./claude-fable-5-2-migration) | Claude API · Anthropic SDK · Vitest · TypeScript | [Claude Fable 5.2 migration for TypeScript backends](https://sascha-ms.de/en/claude-fable-5-2-migration-typescript) · [DE](https://sascha-ms.de/2026/2564-claude-fable-5-2-migration) |
