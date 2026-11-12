@@ -1,0 +1,48 @@
+# serverless.yml – deploys the same handler to real AWS (Serverless Framework v4)
+service: bike-rental-reservations
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  architecture: arm64
+  region: eu-central-1
+  environment:
+    TABLE_NAME: !Ref ReservationsTable
+    QUEUE_URL: !Ref ReservationEventsQueue
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: dynamodb:PutItem
+          Resource: !GetAtt ReservationsTable.Arn
+        - Effect: Allow
+          Action: sqs:SendMessage
+          Resource: !GetAtt ReservationEventsQueue.Arn
+
+functions:
+  createReservation:
+    handler: src/reservation.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /reservations
+
+resources:
+  Resources:
+    ReservationsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+    ReservationEventsQueue:
+      Type: AWS::SQS::Queue
