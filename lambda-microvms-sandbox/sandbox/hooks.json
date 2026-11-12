@@ -1,0 +1,5 @@
+{
+  "port": 8080,
+  "microvmImageHooks": { "ready": "ENABLED", "readyTimeoutInSeconds": 60 },
+  "microvmHooks": { "run": "ENABLED", "runTimeoutInSeconds": 10 }
+}

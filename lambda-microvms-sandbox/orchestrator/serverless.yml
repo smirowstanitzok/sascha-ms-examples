@@ -1,0 +1,61 @@
+# serverless.yml
+service: codegarden-sandbox
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: ${opt:region, 'us-east-1'}
+  memorySize: 512
+  timeout: 29
+  environment:
+    SESSIONS_TABLE: !Ref SessionsTable
+    IMAGE_ARN: arn:aws:lambda:${aws:region}:${aws:accountId}:microvm-image:codegarden-runner
+    # Optional: VPC egress connector without internet route (see article)
+    EGRESS_CONNECTOR_ARN: ${param:egressConnectorArn, ''}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - lambda:RunMicrovm
+            - lambda:GetMicrovm
+            - lambda:TerminateMicrovm
+            - lambda:CreateMicrovmAuthToken
+          Resource: arn:aws:lambda:${aws:region}:${aws:accountId}:microvm-image:codegarden-runner
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:DeleteItem
+          Resource: !GetAtt SessionsTable.Arn
+
+functions:
+  createSession:
+    handler: src/handlers.createSession
+    reservedConcurrency: 5 # protects against a flood of new VMs
+    events:
+      - httpApi: { method: POST, path: /sessions }
+  runSnippet:
+    handler: src/handlers.runSnippet
+    events:
+      - httpApi: { method: POST, path: '/sessions/{id}/snippets' }
+  endSession:
+    handler: src/handlers.endSession
+    events:
+      - httpApi: { method: DELETE, path: '/sessions/{id}' }
+
+resources:
+  Resources:
+    SessionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - { AttributeName: sessionId, AttributeType: S }
+        KeySchema:
+          - { AttributeName: sessionId, KeyType: HASH }
+        TimeToLiveSpecification:
+          AttributeName: expiresAt
+          Enabled: true

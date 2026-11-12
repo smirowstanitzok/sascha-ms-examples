@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`lambda-microvms-sandbox`](./lambda-microvms-sandbox) | Serverless · AI · Lambda MicroVMs · Serverless Framework · TypeScript | [Lambda MicroVMs: run AI code safely in a sandbox](https://sascha-ms.de/en/lambda-microvms-ai-sandbox) · [DE](https://sascha-ms.de/2026/2738-lambda-microvms-ki-sandbox) |
 | [`dlq-construct-cdk`](./dlq-construct-cdk) | Serverless · SQS · AWS CDK · TypeScript | [Dead-letter queue with CDK: alarms and automatic redrive](https://sascha-ms.de/en/dead-letter-queue-cdk-redrive) · [DE](https://sascha-ms.de/2026/2704-dead-letter-queue-mit-cdk) |
 | [`elasticache-vector-search`](./elasticache-vector-search) | ElastiCache Serverless · Valkey · Amazon Bedrock · Lambda · Serverless Framework · TypeScript | [ElastiCache vector search: hybrid search from Lambda](https://sascha-ms.de/en/elasticache-vector-search-lambda) |
 | [`agentcore-web-search-api`](./agentcore-web-search-api) | Amazon Bedrock AgentCore · Lambda · AWS CDK · TypeScript | [AgentCore Web Search API: web search without a gateway](https://sascha-ms.de/en/agentcore-web-search-api) · [DE](https://sascha-ms.de/2026/2659-agentcore-web-search-api) |

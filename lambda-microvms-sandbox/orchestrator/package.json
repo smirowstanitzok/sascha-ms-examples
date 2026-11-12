@@ -1,0 +1,19 @@
+{
+  "name": "sandbox-orchestrator",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "deploy": "serverless deploy"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1167.0",
+    "@aws-sdk/client-lambda-microvms": "^3.1167.0",
+    "@aws-sdk/lib-dynamodb": "^3.1167.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3"
+  }
+}
