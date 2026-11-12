@@ -1,0 +1,26 @@
+{
+  "name": "dlq-construct-cdk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^22.18.0",
+    "aws-cdk": "^2.1148.1",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.20.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.1167.0",
+    "aws-cdk-lib": "^2.276.0",
+    "constructs": "^10.4.2"
+  }
+}
