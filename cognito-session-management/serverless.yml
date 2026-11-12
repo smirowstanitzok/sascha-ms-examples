@@ -1,0 +1,96 @@
+# serverless.yml
+service: speichenwerk-sessions
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 256
+  timeout: 10
+  logRetentionInDays: 14
+  httpApi:
+    authorizers:
+      cognito:
+        identitySource: $request.header.Authorization
+        issuerUrl:
+          Fn::Join:
+            - ""
+            - - https://cognito-idp.
+              - Ref: AWS::Region
+              - .amazonaws.com/
+              - Ref: UserPool
+        audience:
+          - Ref: UserPoolClient
+  iam:
+    role:
+      statements:
+        # Only the support function needs this; use one role per function in production
+        - Effect: Allow
+          Action:
+            - cognito-idp:AdminListUserSessions
+            - cognito-idp:AdminRevokeUserSession
+          Resource:
+            Fn::GetAtt: [UserPool, Arn]
+
+functions:
+  listSessions:
+    handler: src/my-sessions.list
+    events:
+      - httpApi:
+          method: GET
+          path: /sessions
+          authorizer:
+            name: cognito
+  revokeSession:
+    handler: src/my-sessions.revoke
+    events:
+      - httpApi:
+          method: DELETE
+          path: /sessions/{id}
+          authorizer:
+            name: cognito
+  support:
+    handler: src/support.handler
+    environment:
+      USER_POOL_ID:
+        Ref: UserPool
+
+resources:
+  Resources:
+    UserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: speichenwerk-customers
+        # Session management is only available in the Essentials and Plus feature plans
+        UserPoolTier: ESSENTIALS
+        UsernameAttributes: [email]
+        AutoVerifiedAttributes: [email]
+    UserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: speichenwerk-app
+        UserPoolId:
+          Ref: UserPool
+        GenerateSecret: false
+        EnableTokenRevocation: true
+        # USER_PASSWORD_AUTH only for the CLI test, prefer USER_AUTH or SRP in the app
+        ExplicitAuthFlows:
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        # Short access tokens: ended sessions lose their effect quickly
+        AccessTokenValidity: 15
+        IdTokenValidity: 15
+        RefreshTokenValidity: 30
+        TokenValidityUnits:
+          AccessToken: minutes
+          IdToken: minutes
+          RefreshToken: days
+  Outputs:
+    UserPoolId:
+      Value:
+        Ref: UserPool
+    UserPoolClientId:
+      Value:
+        Ref: UserPoolClient
