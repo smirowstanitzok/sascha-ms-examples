@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`cognito-token-exchange`](./cognito-token-exchange) | Serverless · Cognito · OAuth 2.0 · AI agents · Lambda · AWS CDK · TypeScript | [Cognito token exchange: let AI agents act safely](https://sascha-ms.de/en/cognito-token-exchange-ai-agents) · [DE](https://sascha-ms.de/2026/2821-cognito-token-exchange-ki-agenten) |
 | [`s3-malware-scan-cdk`](./s3-malware-scan-cdk) | Serverless · S3 · GuardDuty · Lambda · AWS CDK · TypeScript | [S3 malware scanning: check uploads with GuardDuty](https://sascha-ms.de/en/s3-malware-scanning-guardduty) · [DE](https://sascha-ms.de/2026/2785-s3-malware-scan-guardduty) |
 | [`cloudfront-signed-downloads`](./cloudfront-signed-downloads) | Serverless · CloudFront · Lambda · Serverless Framework · TypeScript | [CloudFront Signed URLs: Private Downloads with Lambda](https://sascha-ms.de/en/cloudfront-signed-urls-lambda) · [DE](https://sascha-ms.de/2026/2776-cloudfront-signed-urls-lambda) |
 | [`s3-presigned-upload`](./s3-presigned-upload) | Serverless · S3 · Lambda · Serverless Framework · TypeScript | [S3 presigned URL: secure file uploads with Lambda](https://sascha-ms.de/en/s3-presigned-url-upload-lambda) · [DE](https://sascha-ms.de/2026/2751-s3-presigned-url-upload-lambda) |
