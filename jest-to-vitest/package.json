@@ -1,0 +1,26 @@
+{
+  "name": "jest-to-vitest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Example for the article: Migrate Jest to Vitest (TypeScript 7, Lambda handlers)",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "coverage": "vitest run --coverage",
+    "check:jest": "node scripts/jest-check.mjs test"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1168.0",
+    "@aws-sdk/lib-dynamodb": "^3.1168.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.20.5",
+    "@vitest/coverage-v8": "^5.1.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "aws-sdk-client-mock-vitest": "^8.0.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
