@@ -1,0 +1,21 @@
+{
+  "name": "lambda-timeout-budget",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lambda timeouts as one time budget: API Gateway, Lambda, AWS SDK, fetch and SQS (example for sascha-ms.de)",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1168.0",
+    "@aws-sdk/lib-dynamodb": "^3.1168.0",
+    "@smithy/node-http-handler": "^4.14.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  }
+}
