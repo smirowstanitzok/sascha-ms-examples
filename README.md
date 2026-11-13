@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`jest-to-vitest`](./jest-to-vitest) | TypeScript · Testing · Vitest · Jest | [Migrate Jest to Vitest: move TypeScript tests](https://sascha-ms.de/en/migrate-jest-to-vitest) · [DE](https://sascha-ms.de/2026/2863-jest-zu-vitest-migrieren) |
 | [`agentcore-runtime-v2`](./agentcore-runtime-v2) | Serverless · AWS · AI agents · Bedrock AgentCore · AWS CDK · TypeScript | [AgentCore Runtime V2: avoid snapshot pitfalls](https://sascha-ms.de/en/agentcore-runtime-v2-snapshot-pitfalls) · [DE](https://sascha-ms.de/2026/2848-agentcore-runtime-v2-snapshot) |
 | [`cognito-token-exchange`](./cognito-token-exchange) | Serverless · Cognito · OAuth 2.0 · AI agents · Lambda · AWS CDK · TypeScript | [Cognito token exchange: let AI agents act safely](https://sascha-ms.de/en/cognito-token-exchange-ai-agents) · [DE](https://sascha-ms.de/2026/2821-cognito-token-exchange-ki-agenten) |
 | [`s3-malware-scan-cdk`](./s3-malware-scan-cdk) | Serverless · S3 · GuardDuty · Lambda · AWS CDK · TypeScript | [S3 malware scanning: check uploads with GuardDuty](https://sascha-ms.de/en/s3-malware-scanning-guardduty) · [DE](https://sascha-ms.de/2026/2785-s3-malware-scan-guardduty) |
