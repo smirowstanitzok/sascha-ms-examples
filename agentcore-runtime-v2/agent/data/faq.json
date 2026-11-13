@@ -1,0 +1,6 @@
+[
+  { "q": "How long can I rent a bike?", "a": "From one hour up to 14 days. Longer rentals on request." },
+  { "q": "What does a city bike cost?", "a": "4 euros per hour or 18 euros per day." },
+  { "q": "Do I need to bring ID?", "a": "Yes, a photo ID is required when you pick up the bike." },
+  { "q": "What happens if I get a flat tyre?", "a": "Call the service hotline. We bring a replacement bike within the city limits." }
+]

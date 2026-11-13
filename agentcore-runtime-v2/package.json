@@ -1,0 +1,19 @@
+{
+  "name": "agentcore-runtime-v2",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "check:snapshot": "tsx tools/snapshot-check.ts agent/src",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "synth": "cdk synth"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "aws-cdk": "^2.1148.1",
+    "aws-cdk-lib": "^2.276.0",
+    "constructs": "^10.4.2",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3"
+  }
+}
