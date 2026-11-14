@@ -1,0 +1,171 @@
+# serverless.yml
+service: katalog-import
+
+frameworkVersion: '4'
+
+plugins:
+  - serverless-step-functions
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 512
+  timeout: 60
+  environment:
+    TABLE_NAME: !Ref BooksTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: dynamodb:BatchWriteItem
+          Resource: !GetAtt BooksTable.Arn
+
+functions:
+  importBatch:
+    handler: src/import-batch.handler
+
+stepFunctions:
+  validate: true
+  stateMachines:
+    katalogImport:
+      id: KatalogImportStateMachine
+      name: ${self:service}-${sls:stage}-katalog-import
+      role:
+        Fn::GetAtt: [StateMachineRole, Arn]
+      definition:
+        Comment: Reads a catalog CSV from S3 and imports it in batches
+        StartAt: KatalogImportieren
+        States:
+          KatalogImportieren:
+            Type: Map
+            Label: KatalogImport
+            MaxConcurrency: 20
+            ToleratedFailurePercentage: 5
+            ItemReader:
+              Resource: arn:aws:states:::s3:getObject
+              ReaderConfig:
+                InputType: CSV
+                CSVHeaderLocation: FIRST_ROW
+                CSVDelimiter: SEMICOLON
+              Parameters:
+                Bucket:
+                  Ref: ImportBucket
+                Key.$: $.key
+            ItemBatcher:
+              MaxItemsPerBatch: 500
+              BatchInput:
+                source: verbundkatalog
+            ItemProcessor:
+              ProcessorConfig:
+                Mode: DISTRIBUTED
+                ExecutionType: EXPRESS
+              StartAt: BatchSpeichern
+              States:
+                BatchSpeichern:
+                  Type: Task
+                  Resource: arn:aws:states:::lambda:invoke
+                  Parameters:
+                    FunctionName:
+                      Fn::GetAtt: [ImportBatchLambdaFunction, Arn]
+                    Payload.$: $
+                  OutputPath: $.Payload
+                  Retry:
+                    - ErrorEquals:
+                        - Lambda.TooManyRequestsException
+                        - Lambda.ServiceException
+                        - Lambda.AWSLambdaException
+                        - Lambda.SdkClientException
+                      IntervalSeconds: 2
+                      MaxAttempts: 4
+                      BackoffRate: 2
+                      JitterStrategy: FULL
+                  End: true
+            ResultWriter:
+              Resource: arn:aws:states:::s3:putObject
+              Parameters:
+                Bucket:
+                  Ref: ImportBucket
+                Prefix: ergebnisse
+            End: true
+
+resources:
+  Resources:
+    ImportBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+        LifecycleConfiguration:
+          Rules:
+            - Id: ErgebnisseAufraeumen
+              Status: Enabled
+              Prefix: ergebnisse/
+              ExpirationInDays: 30
+
+    BooksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: isbn
+            AttributeType: S
+        KeySchema:
+          - AttributeName: isbn
+            KeyType: HASH
+
+    StateMachineRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: states.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: katalog-import
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                # Start and observe the child workflows of the Distributed Map
+                - Effect: Allow
+                  Action: states:StartExecution
+                  Resource: arn:aws:states:${aws:region}:${aws:accountId}:stateMachine:${self:service}-${sls:stage}-katalog-import
+                - Effect: Allow
+                  Action: states:DescribeExecution
+                  Resource:
+                    - arn:aws:states:${aws:region}:${aws:accountId}:execution:${self:service}-${sls:stage}-katalog-import:*
+                    - arn:aws:states:${aws:region}:${aws:accountId}:execution:${self:service}-${sls:stage}-katalog-import/*
+                # Restart failed runs (redrive)
+                - Effect: Allow
+                  Action: states:RedriveExecution
+                  Resource: arn:aws:states:${aws:region}:${aws:accountId}:execution:${self:service}-${sls:stage}-katalog-import/KatalogImport:*
+                # Read the CSV
+                - Effect: Allow
+                  Action: s3:GetObject
+                  Resource: !Join ['', [!GetAtt ImportBucket.Arn, '/eingang/*']]
+                # Write the results
+                - Effect: Allow
+                  Action:
+                    - s3:PutObject
+                    - s3:GetObject
+                    - s3:ListMultipartUploadParts
+                    - s3:AbortMultipartUpload
+                  Resource: !Join ['', [!GetAtt ImportBucket.Arn, '/ergebnisse/*']]
+                - Effect: Allow
+                  Action: lambda:InvokeFunction
+                  Resource:
+                    - !GetAtt ImportBatchLambdaFunction.Arn
+                    - !Join ['', [!GetAtt ImportBatchLambdaFunction.Arn, ':*']]
+
+  Outputs:
+    ImportBucketName:
+      Value: !Ref ImportBucket
+    StateMachineArn:
+      Value: !Ref KatalogImportStateMachine

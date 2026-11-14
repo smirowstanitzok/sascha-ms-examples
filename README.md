@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`step-functions-distributed-map`](./step-functions-distributed-map) | Serverless · Step Functions · S3 · DynamoDB · Serverless Framework · TypeScript | [Step Functions Distributed Map: Process CSV with Lambda](https://sascha-ms.de/en/step-functions-distributed-map-csv-lambda) · [DE](https://sascha-ms.de/2026/3020-step-functions-distributed-map) |
 | [`route53-record-set-protection`](./route53-record-set-protection) | DevOps · Route 53 · IAM · Lambda · Serverless Framework · TypeScript | [Route 53 Record Set Protection: Lock Critical DNS Records](https://sascha-ms.de/en/route-53-record-set-protection) · [DE](https://sascha-ms.de/2026/3007-route-53-record-set-protection) |
 | [`secrets-manager-cross-account-replication`](./secrets-manager-cross-account-replication) | Serverless · Secrets Manager · KMS · AWS CDK · TypeScript | [Secrets Manager Cross-Account Replication: Setup Guide](https://sascha-ms.de/en/secrets-manager-cross-account-replication) · [DE](https://sascha-ms.de/2026/2992-secrets-manager-cross-account-replikation) |
 | [`step-functions-timeouts`](./step-functions-timeouts) | Serverless · Step Functions · SQS · AWS CDK · TypeScript | [Step Functions timeout: getting heartbeats right](https://sascha-ms.de/en/step-functions-timeout-heartbeats) · [DE](https://sascha-ms.de/2026/2934-step-functions-timeout-heartbeat) |

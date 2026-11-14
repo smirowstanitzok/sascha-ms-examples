@@ -1,0 +1,23 @@
+{
+  "name": "katalog-import-distributed-map",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "generate-csv": "tsx scripts/generate-csv.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1169.0",
+    "@aws-sdk/lib-dynamodb": "^3.1169.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^24.0.0",
+    "serverless-step-functions": "^3.31.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
