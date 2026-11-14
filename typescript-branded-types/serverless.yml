@@ -1,0 +1,44 @@
+# serverless.yml
+service: library-loans
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 256
+  timeout: 10
+  environment:
+    TABLE_NAME: ${self:service}-${sls:stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: dynamodb:PutItem
+          Resource: !GetAtt LoansTable.Arn
+
+functions:
+  lendBook:
+    handler: src/handler.handler
+    events:
+      - httpApi:
+          path: /loans
+          method: post
+
+resources:
+  Resources:
+    LoansTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${sls:stage}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
