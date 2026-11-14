@@ -12,7 +12,7 @@
     "@aws-sdk/client-route-53": "^3.1169.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^26.0.0",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0"
   }

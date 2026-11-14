@@ -1,5 +1,5 @@
 # sandbox/Dockerfile
-FROM node:24-alpine
+FROM node:26-alpine
 
 WORKDIR /app
 COPY execute.ts server.ts ./
