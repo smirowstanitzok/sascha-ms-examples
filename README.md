@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`secrets-manager-cross-account-replication`](./secrets-manager-cross-account-replication) | Serverless · Secrets Manager · KMS · AWS CDK · TypeScript | [Secrets Manager Cross-Account Replication: Setup Guide](https://sascha-ms.de/en/secrets-manager-cross-account-replication) · [DE](https://sascha-ms.de/2026/2992-secrets-manager-cross-account-replikation) |
 | [`step-functions-timeouts`](./step-functions-timeouts) | Serverless · Step Functions · SQS · AWS CDK · TypeScript | [Step Functions timeout: getting heartbeats right](https://sascha-ms.de/en/step-functions-timeout-heartbeats) · [DE](https://sascha-ms.de/2026/2934-step-functions-timeout-heartbeat) |
 | [`lambda-timeout-budget`](./lambda-timeout-budget) | Serverless · Lambda · API Gateway · SQS · Serverless Framework · TypeScript | [Lambda timeouts done right: a time budget, not luck](https://sascha-ms.de/en/lambda-timeout-budget) · [DE](https://sascha-ms.de/2026/2878-lambda-timeout-zeitbudget) |
 | [`jest-to-vitest`](./jest-to-vitest) | TypeScript · Testing · Vitest · Jest | [Migrate Jest to Vitest: move TypeScript tests](https://sascha-ms.de/en/migrate-jest-to-vitest) · [DE](https://sascha-ms.de/2026/2863-jest-zu-vitest-migrieren) |
