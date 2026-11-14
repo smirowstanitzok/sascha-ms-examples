@@ -1,0 +1,19 @@
+{
+  "name": "dns-guard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test test/*.test.ts",
+    "change": "tsx src/change-protected.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-route-53": "^3.1169.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
