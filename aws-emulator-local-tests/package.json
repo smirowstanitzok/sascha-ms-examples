@@ -16,7 +16,7 @@
     "@aws-sdk/client-sts": "^3.1167.0",
     "@types/aws-lambda": "^8.10.145",
     "@types/node": "^22.10.0",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.0",
     "vitest": "^3.2.4"
   }
 }
