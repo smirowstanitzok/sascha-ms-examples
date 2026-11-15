@@ -1,0 +1,25 @@
+{
+  "name": "middy-lambda-middleware",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@middy/core": "7.9.2",
+    "@middy/http-error-handler": "7.9.2",
+    "@middy/http-header-normalizer": "7.9.2",
+    "@middy/http-json-body-parser": "7.9.2",
+    "http-errors": "2.0.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/http-errors": "^2.0.5",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  }
+}
