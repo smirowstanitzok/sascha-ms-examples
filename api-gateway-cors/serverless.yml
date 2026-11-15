@@ -1,0 +1,41 @@
+# serverless.yml
+service: bike-rental-api
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 256
+  httpApi:
+    cors:
+      # Exact origins only: scheme + host + port, no trailing slash
+      allowedOrigins:
+        - https://app.bike-rental.example
+        - http://localhost:5173
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - GET
+        - POST
+      # Lets frontend JavaScript read this response header
+      exposedResponseHeaders:
+        - X-Booking-Id
+      # Seconds the browser may cache the preflight result
+      maxAge: 3600
+
+functions:
+  listBikes:
+    handler: src/bikes.listBikes
+    events:
+      - httpApi:
+          method: GET
+          path: /bikes
+  createBooking:
+    handler: src/bikes.createBooking
+    events:
+      - httpApi:
+          method: POST
+          path: /bookings
