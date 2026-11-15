@@ -1,0 +1,27 @@
+<!-- web/index.html -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Lending Library</title></head>
+<body>
+  <h1>Lending Library</h1>
+  <button id="login">Sign in as guest</button>
+  <p id="me">Not signed in yet.</p>
+  <ul id="books"></ul>
+  <script>
+    // Relative paths: same domain, so no CORS and no preflight
+    async function loadBooks() {
+      const res = await fetch('/api/books');
+      const { books } = await res.json();
+      document.getElementById('books').innerHTML = books
+        .map((b) => `<li>${b.title} ${b.available ? '(available)' : '(on loan)'}</li>`)
+        .join('');
+    }
+    document.getElementById('login').onclick = async () => {
+      await fetch('/api/session', { method: 'POST' });
+      const me = await (await fetch('/api/me')).json();
+      document.getElementById('me').textContent = 'Signed in as ' + me.reader;
+    };
+    loadBooks();
+  </script>
+</body>
+</html>
