@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`cache-stampede-lambda`](./cache-stampede-lambda) | Serverless · Lambda · ElastiCache Valkey · Bedrock · Caching · AWS CDK · TypeScript | [Prevent a cache stampede: Lambda, Valkey and Bedrock](https://sascha-ms.de/en/cache-stampede-lambda-valkey) · [DE](https://sascha-ms.de/2026/3135-cache-stampede-verhindern) |
 | [`semantic-cache-bedrock`](./semantic-cache-bedrock) | AI · Serverless · Bedrock · ElastiCache Valkey · Vector search · Serverless Framework | [Semantic cache for Bedrock with ElastiCache and Lambda](https://sascha-ms.de/en/semantic-cache-bedrock) · [DE](https://sascha-ms.de/2026/3090-semantischer-cache-bedrock) |
 | [`typescript-branded-types`](./typescript-branded-types) | TypeScript · Branded types · Zod · Lambda · DynamoDB · Serverless Framework | [TypeScript Branded Types: Type-Safe IDs in Lambda](https://sascha-ms.de/en/typescript-branded-types-lambda) · [DE](https://sascha-ms.de/2026/3066-typescript-branded-types) |
 | [`step-functions-distributed-map`](./step-functions-distributed-map) | Serverless · Step Functions · S3 · DynamoDB · Serverless Framework · TypeScript | [Step Functions Distributed Map: Process CSV with Lambda](https://sascha-ms.de/en/step-functions-distributed-map-csv-lambda) · [DE](https://sascha-ms.de/2026/3020-step-functions-distributed-map) |
