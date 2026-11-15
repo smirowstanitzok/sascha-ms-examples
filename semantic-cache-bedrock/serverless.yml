@@ -1,0 +1,60 @@
+# serverless.yml
+service: bike-station-faq
+frameworkVersion: "4"
+
+build:
+  esbuild: false # we compile with tsc ourselves because GLIDE ships a native library
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: x86_64
+  region: eu-central-1
+  memorySize: 512
+  timeout: 15
+  environment:
+    CACHE_NAME: ${param:cacheName, 'bike-station-cache'}
+    CACHE_HOST: ${param:cacheHost}
+    MODEL_ID: ${param:modelId, 'eu.amazon.nova-lite-v1:0'}
+    KB_VERSION: ${param:kbVersion, 'v1'}
+    MAX_DISTANCE: "0.1"
+    TTL_SECONDS: "82800"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: elasticache:Connect
+          Resource:
+            - arn:aws:elasticache:${aws:region}:${aws:accountId}:serverlesscache:${param:cacheName, 'bike-station-cache'}
+            - arn:aws:elasticache:${aws:region}:${aws:accountId}:user:default.iam-user
+        - Effect: Allow
+          Action: bedrock:InvokeModel
+          Resource:
+            - arn:aws:bedrock:${aws:region}::foundation-model/amazon.titan-embed-text-v2:0
+            - arn:aws:bedrock:${aws:region}:${aws:accountId}:inference-profile/${param:modelId, 'eu.amazon.nova-lite-v1:0'}
+            - arn:aws:bedrock:*::foundation-model/amazon.nova-lite-v1:0
+
+package:
+  patterns:
+    - "!**"
+    - dist/src/**
+    - node_modules/**
+    - "!node_modules/.bin/**"
+    - "!node_modules/typescript/**"
+    - "!node_modules/@typescript/**"
+    - "!node_modules/vitest/**"
+    - "!node_modules/@vitest/**"
+    - "!node_modules/vite/**"
+    - "!node_modules/esbuild/**"
+    - "!node_modules/@esbuild/**"
+    - "!node_modules/tsx/**"
+    - "!node_modules/rollup/**"
+    - "!node_modules/@rollup/**"
+
+functions:
+  faq:
+    handler: dist/src/handler.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /question

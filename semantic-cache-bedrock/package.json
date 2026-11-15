@@ -1,0 +1,24 @@
+{
+  "name": "bike-station-faq",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "setup-index": "tsx scripts/setup-index.ts",
+    "calibrate": "tsx scripts/calibrate.ts",
+    "deploy": "npm run build && serverless deploy --param=\"cacheHost=$CACHE_HOST\""
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1169.0",
+    "@valkey/valkey-glide": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^24.19.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
