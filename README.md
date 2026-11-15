@@ -47,6 +47,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`appconfig-feature-flags-lambda`](./appconfig-feature-flags-lambda) | Serverless · AWS CDK · TypeScript | [AppConfig feature flags in Lambda: safe rollouts](https://sascha-ms.de/en/appconfig-feature-flags-lambda) · [DE](https://sascha-ms.de/2026/1709-appconfig-feature-flags-lambda) |
 | [`uv-lambda-layer`](./uv-lambda-layer) | Serverless · Python · Serverless Framework | [uv for AWS Lambda: Packaging Python Dependencies](https://sascha-ms.de/en/uv-aws-lambda-python-dependencies) |
 | [`monte-carlo-forecast`](./monte-carlo-forecast) | Agile · Kanban · TypeScript | [Monte Carlo forecasting: delivery dates without story points](https://sascha-ms.de/en/monte-carlo-forecasting-delivery-dates) · [DE](https://sascha-ms.de/2026/2610-monte-carlo-simulation-liefertermine) |
+| [`step-functions-activity-worker`](./step-functions-activity-worker) | Serverless · Step Functions · AWS CDK · TypeScript | [Step Functions Activity vs. Callback: When to Poll](https://sascha-ms.de/en/step-functions-activity-worker) · [DE](https://sascha-ms.de/2026/3180-step-functions-activity-worker) |
 
 ## How to use
 
