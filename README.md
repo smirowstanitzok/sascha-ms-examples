@@ -49,6 +49,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`monte-carlo-forecast`](./monte-carlo-forecast) | Agile · Kanban · TypeScript | [Monte Carlo forecasting: delivery dates without story points](https://sascha-ms.de/en/monte-carlo-forecasting-delivery-dates) · [DE](https://sascha-ms.de/2026/2610-monte-carlo-simulation-liefertermine) |
 | [`step-functions-activity-worker`](./step-functions-activity-worker) | Serverless · Step Functions · AWS CDK · TypeScript | [Step Functions Activity vs. Callback: When to Poll](https://sascha-ms.de/en/step-functions-activity-worker) · [DE](https://sascha-ms.de/2026/3180-step-functions-activity-worker) |
 | [`middy-lambda-middleware`](./middy-lambda-middleware) | Serverless · Lambda · Middy · Serverless Framework · TypeScript | [Middy middleware for AWS Lambda in TypeScript](https://sascha-ms.de/en/middy-middleware-lambda-typescript) · [DE](https://sascha-ms.de/2026/3220-middy-middleware-lambda) |
+| [`api-gateway-cors`](./api-gateway-cors) | Serverless · API Gateway · Lambda · Serverless Framework · AWS CDK · TypeScript | [API Gateway CORS: fix preflight and function URL errors](https://sascha-ms.de/en/api-gateway-cors-preflight-function-urls) · [DE](https://sascha-ms.de/2026/3236-api-gateway-cors-lambda) |
 
 ## How to use
 
