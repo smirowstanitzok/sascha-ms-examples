@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`lambda-sse-ai-chat`](./lambda-sse-ai-chat) | AI · Serverless · Lambda · Response streaming · Server-sent events · Amazon Bedrock · AWS CDK · TypeScript | [Server-Sent Events with Lambda for AI Chats](https://sascha-ms.de/en/server-sent-events-lambda-ai-chat) · [DE](https://sascha-ms.de/2026/3379-server-sent-events-lambda) |
 | [`bulkhead-pattern-lambda`](./bulkhead-pattern-lambda) | Serverless · Lambda · SQS · Bulkhead pattern · Resilience · Serverless Framework · TypeScript | [Bulkhead pattern with Lambda: isolate third-party systems](https://sascha-ms.de/en/bulkhead-pattern-lambda) · [DE](https://sascha-ms.de/2026/3325-bulkhead-pattern-lambda) |
 | [`cdk-cli-commands`](./cdk-cli-commands) | Serverless · AWS CDK · CDK CLI · CloudFormation · TypeScript | [AWS CDK CLI commands: every command explained](https://sascha-ms.de/en/cdk-cli-commands) · [DE](https://sascha-ms.de/2026/3314-cdk-cli-befehle) |
 | [`cloudfront-functions-vs-lambda-edge`](./cloudfront-functions-vs-lambda-edge) | Serverless · CloudFront Functions · Lambda@Edge · KeyValueStore · Cognito · AWS CDK · TypeScript | [CloudFront Functions vs Lambda@Edge: which one fits when](https://sascha-ms.de/en/cloudfront-functions-vs-lambda-edge) · [DE](https://sascha-ms.de/2026/3294-cloudfront-functions-vs-lambda-edge) |
