@@ -1,0 +1,141 @@
+# serverless.yml
+service: bike-rental-bulkheads
+frameworkVersion: '4'
+
+params:
+  default:
+    paymentUrl: https://payments.example.com
+    lockUrl: https://locks.example.com
+    smsUrl: https://sms.example.com
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 256
+  timeout: 15
+  logRetentionInDays: 14
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: sqs:SendMessage
+          Resource:
+            - !GetAtt PaymentQueue.Arn
+            - !GetAtt LockQueue.Arn
+            - !GetAtt SmsQueue.Arn
+
+build:
+  esbuild:
+    bundle: true
+    minify: false
+
+functions:
+  # No reservation: the API uses the shared, unreserved pool.
+  createBooking:
+    handler: src/handlers/create-booking.handler
+    timeout: 6
+    environment:
+      PAYMENT_QUEUE_URL: !Ref PaymentQueue
+      LOCK_QUEUE_URL: !Ref LockQueue
+      SMS_QUEUE_URL: !Ref SmsQueue
+    events:
+      - httpApi:
+          path: /bookings
+          method: post
+
+  # One bulkhead per partner: reservedConcurrency >= maximumConcurrency
+  paymentWorker:
+    handler: src/handlers/payment-worker.handler
+    reservedConcurrency: 12
+    environment:
+      PARTNER_URL: ${param:paymentUrl}
+      CALL_TIMEOUT_MS: '2500'
+    events:
+      - sqs:
+          arn: !GetAtt PaymentQueue.Arn
+          batchSize: 5
+          maximumConcurrency: 10
+          functionResponseType: ReportBatchItemFailures
+
+  lockWorker:
+    handler: src/handlers/lock-worker.handler
+    reservedConcurrency: 8
+    environment:
+      PARTNER_URL: ${param:lockUrl}
+      CALL_TIMEOUT_MS: '2500'
+    events:
+      - sqs:
+          arn: !GetAtt LockQueue.Arn
+          batchSize: 5
+          maximumConcurrency: 6
+          functionResponseType: ReportBatchItemFailures
+
+  smsWorker:
+    handler: src/handlers/sms-worker.handler
+    reservedConcurrency: 5
+    environment:
+      PARTNER_URL: ${param:smsUrl}
+      CALL_TIMEOUT_MS: '2500'
+    events:
+      - sqs:
+          arn: !GetAtt SmsQueue.Arn
+          batchSize: 5
+          maximumConcurrency: 4
+          functionResponseType: ReportBatchItemFailures
+
+resources:
+  Resources:
+    # Visibility timeout: 6 x function timeout (15 s) = 90 s
+    PaymentQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        VisibilityTimeout: 90
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt PaymentDlq.Arn
+          maxReceiveCount: 5
+    PaymentDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        MessageRetentionPeriod: 1209600
+    LockQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        VisibilityTimeout: 90
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt LockDlq.Arn
+          maxReceiveCount: 5
+    LockDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        MessageRetentionPeriod: 1209600
+    SmsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        VisibilityTimeout: 90
+        MessageRetentionPeriod: 345600
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt SmsDlq.Arn
+          maxReceiveCount: 5
+    SmsDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        MessageRetentionPeriod: 1209600
+
+    # A full bulkhead is not an error, but you want to know about it.
+    SmsBacklogAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        AlarmDescription: SMS messages wait longer than 10 minutes
+        Namespace: AWS/SQS
+        MetricName: ApproximateAgeOfOldestMessage
+        Dimensions:
+          - Name: QueueName
+            Value: !GetAtt SmsQueue.QueueName
+        Statistic: Maximum
+        Period: 60
+        EvaluationPeriods: 5
+        Threshold: 600
+        ComparisonOperator: GreaterThanThreshold
+        TreatMissingData: notBreaching

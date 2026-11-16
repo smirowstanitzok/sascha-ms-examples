@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`bulkhead-pattern-lambda`](./bulkhead-pattern-lambda) | Serverless · Lambda · SQS · Bulkhead pattern · Resilience · Serverless Framework · TypeScript | [Bulkhead pattern with Lambda: isolate third-party systems](https://sascha-ms.de/en/bulkhead-pattern-lambda) · [DE](https://sascha-ms.de/2026/3325-bulkhead-pattern-lambda) |
 | [`cdk-cli-commands`](./cdk-cli-commands) | Serverless · AWS CDK · CDK CLI · CloudFormation · TypeScript | [AWS CDK CLI commands: every command explained](https://sascha-ms.de/en/cdk-cli-commands) · [DE](https://sascha-ms.de/2026/3314-cdk-cli-befehle) |
 | [`cloudfront-functions-vs-lambda-edge`](./cloudfront-functions-vs-lambda-edge) | Serverless · CloudFront Functions · Lambda@Edge · KeyValueStore · Cognito · AWS CDK · TypeScript | [CloudFront Functions vs Lambda@Edge: which one fits when](https://sascha-ms.de/en/cloudfront-functions-vs-lambda-edge) · [DE](https://sascha-ms.de/2026/3294-cloudfront-functions-vs-lambda-edge) |
 | [`cache-stampede-lambda`](./cache-stampede-lambda) | Serverless · Lambda · ElastiCache Valkey · Bedrock · Caching · AWS CDK · TypeScript | [Prevent a cache stampede: Lambda, Valkey and Bedrock](https://sascha-ms.de/en/cache-stampede-lambda-valkey) · [DE](https://sascha-ms.de/2026/3135-cache-stampede-verhindern) |
