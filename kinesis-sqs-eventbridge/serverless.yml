@@ -1,0 +1,153 @@
+# serverless.yml
+service: radwerk-messaging
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 512
+  timeout: 10
+  environment:
+    TELEMETRY_STREAM: !Ref TelemetryStream
+    EVENT_BUS: !Ref RentalBus
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: kinesis:PutRecord
+          Resource: !GetAtt TelemetryStream.Arn
+        - Effect: Allow
+          Action: events:PutEvents
+          Resource: !GetAtt RentalBus.Arn
+        - Effect: Allow
+          Action: sqs:SendMessage
+          Resource: !GetAtt TelemetryFailures.Arn
+
+functions:
+  # Producer 1: telemetry from a rental bike -> Kinesis
+  sendTelemetry:
+    handler: src/handlers/send-telemetry.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /bikes/{bikeId}/telemetry
+
+  # Consumer 1: reads the stream, in order per bike
+  processTelemetry:
+    handler: src/handlers/process-telemetry.handler
+    events:
+      - stream:
+          type: kinesis
+          arn: !GetAtt TelemetryStream.Arn
+          startingPosition: LATEST
+          batchSize: 100
+          batchWindow: 5
+          maximumRetryAttempts: 3
+          maximumRecordAgeInSeconds: 3600
+          bisectBatchOnFunctionError: true
+          functionResponseType: ReportBatchItemFailures
+          destinations:
+            onFailure:
+              arn: !GetAtt TelemetryFailures.Arn
+              type: sqs
+
+  # Producer 2: business event "rental ended" -> EventBridge
+  endRental:
+    handler: src/handlers/end-rental.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /rentals/{rentalId}/end
+
+  # Consumer 2: create the invoice, buffered via SQS
+  createInvoice:
+    handler: src/handlers/create-invoice.handler
+    timeout: 20
+    events:
+      - sqs:
+          arn: !GetAtt InvoiceQueue.Arn
+          batchSize: 10
+          functionResponseType: ReportBatchItemFailures
+
+  # Consumer 3: statistics, directly via an EventBridge rule
+  updateStats:
+    handler: src/handlers/update-stats.handler
+    events:
+      - eventBridge:
+          eventBus: !GetAtt RentalBus.Name
+          pattern:
+            source:
+              - radwerk.rentals
+            detail-type:
+              - RentalEnded
+
+resources:
+  Resources:
+    TelemetryStream:
+      Type: AWS::Kinesis::Stream
+      Properties:
+        StreamModeDetails:
+          StreamMode: ON_DEMAND
+        RetentionPeriodHours: 24
+
+    TelemetryFailures:
+      Type: AWS::SQS::Queue
+      Properties:
+        MessageRetentionPeriod: 1209600
+
+    RentalBus:
+      Type: AWS::Events::EventBus
+      Properties:
+        Name: radwerk-rentals-${sls:stage}
+
+    RentalArchive:
+      Type: AWS::Events::Archive
+      Properties:
+        SourceArn: !GetAtt RentalBus.Arn
+        RetentionDays: 30
+
+    InvoiceDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        MessageRetentionPeriod: 1209600
+
+    InvoiceQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        # at least 6 x function timeout (20 s)
+        VisibilityTimeout: 120
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt InvoiceDlq.Arn
+          maxReceiveCount: 5
+
+    RentalEndedToInvoiceRule:
+      Type: AWS::Events::Rule
+      Properties:
+        EventBusName: !Ref RentalBus
+        EventPattern:
+          source:
+            - radwerk.rentals
+          detail-type:
+            - RentalEnded
+        Targets:
+          - Id: invoice-queue
+            Arn: !GetAtt InvoiceQueue.Arn
+
+    InvoiceQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        Queues:
+          - !Ref InvoiceQueue
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: events.amazonaws.com
+              Action: sqs:SendMessage
+              Resource: !GetAtt InvoiceQueue.Arn
+              Condition:
+                ArnEquals:
+                  aws:SourceArn: !GetAtt RentalEndedToInvoiceRule.Arn
