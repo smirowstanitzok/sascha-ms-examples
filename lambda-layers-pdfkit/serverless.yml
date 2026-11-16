@@ -1,0 +1,54 @@
+# serverless.yml
+service: bike-rental-receipts
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 512
+  timeout: 10
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
+    # Do not bundle these packages ...
+    external:
+      - pdfkit
+      - '@aws-lambda-powertools/*'
+    # ... and do not install them into the function zip either.
+    # They come from the layers at runtime.
+    exclude:
+      - '@aws-sdk/*'
+      - pdfkit
+      - '@aws-lambda-powertools/*'
+
+layers:
+  pdf:
+    path: layers/pdf
+    name: ${sls:stage}-bike-rental-pdf
+    description: pdfkit 0.20.2 for receipts
+    compatibleRuntimes:
+      - nodejs24.x
+    compatibleArchitectures:
+      - arm64
+      - x86_64
+    retain: false
+    package:
+      patterns:
+        - '!nodejs/package-lock.json'
+
+functions:
+  createReceipt:
+    handler: src/receipt.handler
+    layers:
+      # Own layer from this service (CloudFormation name: <Name>LambdaLayer)
+      - !Ref PdfLambdaLayer
+      # Managed Powertools layer, pinned to an exact version
+      - arn:aws:lambda:${aws:region}:094274105915:layer:AWSLambdaPowertoolsTypeScriptV2:51
+    events:
+      - httpApi:
+          method: GET
+          path: /receipts/{rentalId}
