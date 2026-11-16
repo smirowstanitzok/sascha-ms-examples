@@ -1,0 +1,26 @@
+{
+  "name": "cloudfront-functions-vs-lambda-edge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:edge": "node scripts/build-edge.mjs",
+    "test": "node --test test/redirects.test.mjs && tsx --test test/member-auth.test.ts",
+    "typecheck": "tsc --noEmit",
+    "synth": "npm run build:edge && cdk synth",
+    "deploy": "npm run build:edge && cdk deploy --all"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.19.0",
+    "aws-cdk": "^2.1148.1",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.277.0",
+    "aws-jwt-verify": "^5.2.1",
+    "constructs": "^10.8.1"
+  }
+}
