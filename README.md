@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`service-level-expectation`](./service-level-expectation) | Leadership · Kanban · Flow metrics · Cycle time · TypeScript | [Service level expectation: derive it from cycle time](https://sascha-ms.de/en/service-level-expectation) · [DE](https://sascha-ms.de/2026/3518-service-level-expectation) |
 | [`kinesis-sqs-eventbridge`](./kinesis-sqs-eventbridge) | Serverless · Kinesis · SQS · EventBridge · Lambda · Serverless Framework · TypeScript | [Kinesis vs. SQS vs. EventBridge: Which One When?](https://sascha-ms.de/en/kinesis-sqs-eventbridge-comparison) · [DE](https://sascha-ms.de/2026/3447-kinesis-sqs-eventbridge-vergleich) |
 | [`sqs-fair-queues-lambda`](./sqs-fair-queues-lambda) | Serverless · SQS · Fair queues · Multi-tenant · Lambda · CloudWatch · AWS CDK · TypeScript | [SQS fair queues: tame noisy neighbors in Lambda](https://sascha-ms.de/en/sqs-fair-queues-lambda) · [DE](https://sascha-ms.de/2026/3392-sqs-fair-queues-lambda) |
 | [`lambda-sse-ai-chat`](./lambda-sse-ai-chat) | AI · Serverless · Lambda · Response streaming · Server-sent events · Amazon Bedrock · AWS CDK · TypeScript | [Server-Sent Events with Lambda for AI Chats](https://sascha-ms.de/en/server-sent-events-lambda-ai-chat) · [DE](https://sascha-ms.de/2026/3379-server-sent-events-lambda) |
