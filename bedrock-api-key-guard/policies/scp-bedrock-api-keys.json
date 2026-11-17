@@ -1,0 +1,64 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "OnlyKeyAdminCreatesBedrockKeys",
+      "Effect": "Deny",
+      "Action": "iam:CreateServiceSpecificCredential",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": { "iam:ServiceSpecificCredentialServiceName": "bedrock.amazonaws.com" },
+        "ArnNotLike": { "aws:PrincipalArn": "arn:aws:iam::*:role/BedrockKeyAdmin" }
+      }
+    },
+    {
+      "Sid": "BedrockKeysOnlyForApprovedUsers",
+      "Effect": "Deny",
+      "Action": "iam:CreateServiceSpecificCredential",
+      "NotResource": "arn:aws:iam::*:user/bedrock-keys/*",
+      "Condition": {
+        "StringEquals": { "iam:ServiceSpecificCredentialServiceName": "bedrock.amazonaws.com" }
+      }
+    },
+    {
+      "Sid": "NoBedrockKeysWithoutExpiry",
+      "Effect": "Deny",
+      "Action": "iam:CreateServiceSpecificCredential",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": { "iam:ServiceSpecificCredentialServiceName": "bedrock.amazonaws.com" },
+        "Null": { "iam:ServiceSpecificCredentialAgeDays": "true" }
+      }
+    },
+    {
+      "Sid": "MaxThirtyDaysForBedrockKeys",
+      "Effect": "Deny",
+      "Action": "iam:CreateServiceSpecificCredential",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": { "iam:ServiceSpecificCredentialServiceName": "bedrock.amazonaws.com" },
+        "NumericGreaterThan": { "iam:ServiceSpecificCredentialAgeDays": "30" }
+      }
+    },
+    {
+      "Sid": "LongTermKeysOnlyForApprovedUsers",
+      "Effect": "Deny",
+      "Action": "bedrock:CallWithBearerToken",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": { "bedrock:bearerTokenType": "LONG_TERM" },
+        "ArnNotLike": { "aws:PrincipalArn": "arn:aws:iam::*:user/bedrock-keys/*" }
+      }
+    },
+    {
+      "Sid": "LongTermMantleKeysOnlyForApprovedUsers",
+      "Effect": "Deny",
+      "Action": "bedrock-mantle:CallWithBearerToken",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": { "bedrock-mantle:bearerTokenType": "LONG_TERM" },
+        "ArnNotLike": { "aws:PrincipalArn": "arn:aws:iam::*:user/bedrock-keys/*" }
+      }
+    }
+  ]
+}

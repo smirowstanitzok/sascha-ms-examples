@@ -1,0 +1,25 @@
+{
+  "version": "0",
+  "id": "7f1c2d3e-0000-4000-8000-000000000001",
+  "detail-type": "AWS API Call via CloudTrail",
+  "source": "aws.bedrock",
+  "account": "111122223333",
+  "time": "2026-11-17T08:15:02Z",
+  "region": "eu-central-1",
+  "resources": [],
+  "detail": {
+    "eventSource": "bedrock.amazonaws.com",
+    "eventName": "Converse",
+    "eventTime": "2026-11-17T08:15:02Z",
+    "awsRegion": "eu-central-1",
+    "sourceIPAddress": "198.51.100.23",
+    "userAgent": "curl/8.11.1",
+    "userIdentity": {
+      "type": "IAMUser",
+      "arn": "arn:aws:iam::111122223333:user/BedrockAPIKey-x7k2",
+      "userName": "BedrockAPIKey-x7k2"
+    },
+    "requestParameters": { "modelId": "eu.anthropic.claude-sonnet-4-5-20250929-v1:0" },
+    "additionalEventData": { "callWithBearerToken": true, "inferenceRegion": "eu-west-1" }
+  }
+}

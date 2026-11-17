@@ -1,0 +1,125 @@
+# serverless.yml
+service: bedrock-key-guard
+frameworkVersion: '4'
+
+params:
+  default:
+    alertEmail: security@example.com
+    # Comma-separated ARNs that are allowed to use Bedrock with an API key on purpose
+    allowedPrincipals: ''
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  architecture: arm64
+  region: ${opt:region, 'us-east-1'}
+  memorySize: 256
+  timeout: 10
+  logRetentionInDays: 30
+  environment:
+    TOPIC_ARN: !Ref AlertTopic
+    DEDUP_TABLE: !Ref AlertDedupTable
+    DEDUP_MINUTES: '60'
+    ALLOWED_PRINCIPALS: ${param:allowedPrincipals}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: sns:Publish
+          Resource: !Ref AlertTopic
+        - Effect: Allow
+          Action: dynamodb:PutItem
+          Resource: !GetAtt AlertDedupTable.Arn
+
+functions:
+  notify:
+    handler: src/handler.handler
+
+resources:
+  Conditions:
+    # IAM events only arrive on the default bus in us-east-1
+    IsUsEast1: !Equals [!Ref AWS::Region, us-east-1]
+
+  Resources:
+    AlertTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Bedrock Key Guard
+        Subscription:
+          - Protocol: email
+            Endpoint: ${param:alertEmail}
+
+    AlertDedupTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        TimeToLiveSpecification:
+          AttributeName: expiresAt
+          Enabled: true
+
+    # Use of a Bedrock API key, in every Region you deploy to
+    BearerTokenRule:
+      Type: AWS::Events::Rule
+      Properties:
+        Description: Bedrock calls with an API key (bearer token)
+        # Includes read-only management events, otherwise the rule may stay silent
+        State: ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS
+        EventPattern:
+          detail-type:
+            - AWS API Call via CloudTrail
+          detail:
+            eventSource:
+              - bedrock.amazonaws.com
+            additionalEventData:
+              callWithBearerToken:
+                - true
+        Targets:
+          - Id: notify
+            Arn: !GetAtt NotifyLambdaFunction.Arn
+
+    BearerTokenRulePermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Ref NotifyLambdaFunction
+        Principal: events.amazonaws.com
+        SourceArn: !GetAtt BearerTokenRule.Arn
+
+    # Creation of a long-term key, only in us-east-1
+    CreateCredentialRule:
+      Type: AWS::Events::Rule
+      Condition: IsUsEast1
+      Properties:
+        Description: New long-term Bedrock API key
+        State: ENABLED
+        EventPattern:
+          source:
+            - aws.iam
+          detail-type:
+            - AWS API Call via CloudTrail
+          detail:
+            eventSource:
+              - iam.amazonaws.com
+            eventName:
+              - CreateServiceSpecificCredential
+            requestParameters:
+              serviceName:
+                - bedrock.amazonaws.com
+        Targets:
+          - Id: notify
+            Arn: !GetAtt NotifyLambdaFunction.Arn
+
+    CreateCredentialRulePermission:
+      Type: AWS::Lambda::Permission
+      Condition: IsUsEast1
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Ref NotifyLambdaFunction
+        Principal: events.amazonaws.com
+        SourceArn: !GetAtt CreateCredentialRule.Arn

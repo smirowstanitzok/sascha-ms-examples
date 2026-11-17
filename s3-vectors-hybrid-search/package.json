@@ -1,0 +1,20 @@
+{
+  "name": "radwerk-help",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --experimental-strip-types test/*.test.ts",
+    "enable-text-search": "node --experimental-strip-types scripts/enable-text-search.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1170.0",
+    "@aws-sdk/client-s3vectors": "^3.1170.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.9.3"
+  }
+}

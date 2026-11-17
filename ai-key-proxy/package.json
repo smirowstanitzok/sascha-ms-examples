@@ -1,0 +1,27 @@
+{
+  "name": "book-advisor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy",
+    "scan:cdk": "cdk synth -q && tsx scripts/scan-secrets.ts cdk.out"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1170.0",
+    "@aws-sdk/client-dynamodb": "^3.1170.0",
+    "@aws-sdk/client-ssm": "^3.1170.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.10.0",
+    "aws-cdk": "^2.1148.1",
+    "aws-cdk-lib": "^2.277.0",
+    "constructs": "^10.8.1",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}

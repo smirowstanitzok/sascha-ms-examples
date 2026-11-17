@@ -1,0 +1,68 @@
+# serverless.yml
+service: radwerk-help
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 512
+  timeout: 15
+  environment:
+    VECTOR_BUCKET: ${self:custom.vectorBucket}
+    VECTOR_INDEX: help-articles
+    EMBEDDING_MODEL_ID: amazon.titan-embed-text-v2:0
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3vectors:PutVectors
+            - s3vectors:QueryVectors
+            - s3vectors:GetVectors
+          Resource:
+            - !GetAtt HelpIndex.IndexArn
+        - Effect: Allow
+          Action:
+            - bedrock:InvokeModel
+          Resource:
+            - arn:aws:bedrock:${aws:region}::foundation-model/amazon.titan-embed-text-v2:0
+
+custom:
+  vectorBucket: radwerk-help-${sls:stage}-${aws:accountId}
+
+functions:
+  ingest:
+    handler: src/ingest.handler
+    timeout: 120
+  search:
+    handler: src/search.handler
+    events:
+      - httpApi:
+          method: GET
+          path: /search
+
+resources:
+  Resources:
+    HelpVectorBucket:
+      Type: AWS::S3Vectors::VectorBucket
+      Properties:
+        VectorBucketName: ${self:custom.vectorBucket}
+
+    HelpIndex:
+      Type: AWS::S3Vectors::Index
+      DependsOn: HelpVectorBucket
+      Properties:
+        VectorBucketName: ${self:custom.vectorBucket}
+        IndexName: help-articles
+        DataType: float32
+        Dimension: 1024
+        DistanceMetric: cosine
+        MetadataConfiguration:
+          # The long article text is only searched, never filtered.
+          NonFilterableMetadataKeys:
+            - body
+
+  Outputs:
+    VectorBucketName:
+      Value: ${self:custom.vectorBucket}
