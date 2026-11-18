@@ -1,0 +1,80 @@
+# serverless.yml
+service: radwerk-support-memory
+frameworkVersion: "4"
+
+params:
+  default:
+    demoAuth: "false"
+    retentionDays: 365
+    # Look up the inference profile ID for your region in the Bedrock console.
+    modelId: eu.anthropic.claude-sonnet-4-5-20250929-v1:0
+  dev:
+    demoAuth: "true"
+    retentionDays: 30
+
+build:
+  esbuild:
+    bundle: true
+    # Bundle the AWS SDK as well: the runtime's built-in SDK may not know
+    # the newest AgentCore Memory parameters yet.
+    exclude: []
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 512
+  timeout: 29
+  environment:
+    MEMORY_ID: !GetAtt SupportMemory.MemoryId
+    MODEL_ID: ${param:modelId}
+    DEMO_AUTH: ${param:demoAuth}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - bedrock-agentcore:CreateEvent
+            - bedrock-agentcore:ListEvents
+            - bedrock-agentcore:ListMemoryRecords
+          Resource: !GetAtt SupportMemory.MemoryArn
+        - Effect: Allow
+          Action:
+            - bedrock:InvokeModel
+          Resource:
+            - arn:aws:bedrock:*::foundation-model/*
+            - arn:aws:bedrock:${aws:region}:${aws:accountId}:inference-profile/*
+
+functions:
+  chat:
+    handler: src/chat.handler
+    events:
+      - httpApi: { method: POST, path: /chat }
+  sessionRecap:
+    handler: src/recap.session
+    events:
+      - httpApi: { method: GET, path: "/sessions/{sessionId}/recap" }
+  history:
+    handler: src/recap.history
+    events:
+      - httpApi: { method: GET, path: /history }
+
+resources:
+  Resources:
+    SupportMemory:
+      Type: AWS::BedrockAgentCore::Memory
+      Properties:
+        Name: radwerk_support_${sls:stage}
+        Description: Conversation memory of the Radwerk support assistant
+        # Raw events (short-term memory). The API now allows up to 3650 days,
+        # check whether CloudFormation accepts values above 365 in your region.
+        EventExpiryDuration: ${param:retentionDays}
+        MemoryStrategies:
+          - SummaryMemoryStrategy:
+              Name: SessionRecap
+              NamespaceTemplates:
+                - "/summaries/{actorId}/{sessionId}/"
+  Outputs:
+    MemoryId:
+      Value: !GetAtt SupportMemory.MemoryId

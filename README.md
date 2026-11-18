@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`agentcore-session-recap`](./agentcore-session-recap) | AI · Serverless · Bedrock AgentCore Memory · Session summaries · Converse · Serverless Framework · TypeScript | [AgentCore Memory session summaries for AI agents](https://sascha-ms.de/en/agentcore-memory-session-summaries) · [DE](https://sascha-ms.de/2026/3650-agentcore-memory-sitzungszusammenfassung) |
 | [`durable-execution-brake`](./durable-execution-brake) | Serverless · Lambda durable functions · pause, resume, delete executions · IAM · TypeScript | [How to pause durable functions in AWS Lambda](https://sascha-ms.de/en/pause-durable-functions) · [DE](https://sascha-ms.de/2026/3639-durable-functions-pausieren) |
 | [`kinesis-queues-consumer`](./kinesis-queues-consumer) | Serverless · Kinesis Data Streams queues · Fargate · DynamoDB idempotency · AWS CDK · TypeScript | [Kinesis Data Streams queues: workers without shard leases](https://sascha-ms.de/en/kinesis-data-streams-queues) · [DE](https://sascha-ms.de/2026/3626-kinesis-data-streams-queues) |
 | [`lambda-multi-concurrency-nodejs`](./lambda-multi-concurrency-nodejs) | Serverless · Lambda Managed Instances · Node.js · AsyncLocalStorage · Serverless Framework · TypeScript | [Lambda multi-concurrency: safe Node.js handlers on LMI](https://sascha-ms.de/en/lambda-multi-concurrency-nodejs) · [DE](https://sascha-ms.de/2026/3614-lambda-multi-concurrency-nodejs) |

@@ -1,0 +1,22 @@
+{
+  "name": "agentcore-session-recap",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Support agent for a fictional bike rental with AgentCore Memory full session summaries (Serverless Framework, TypeScript)",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test test/*.test.ts",
+    "deploy": "serverless deploy --stage dev"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-agentcore": "^3.1171.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1171.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^22.15.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
