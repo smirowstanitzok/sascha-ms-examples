@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`rest-api-jwt-authorizer`](./rest-api-jwt-authorizer) | Serverless · API Gateway · JWT · Cognito · Lambda · AWS CDK · Serverless Framework · TypeScript | [API Gateway JWT Authorizer for REST APIs with CDK](https://sascha-ms.de/en/api-gateway-jwt-authorizer-rest-api) · [DE](https://sascha-ms.de/2026/3542-api-gateway-jwt-authorizer) |
 | [`s3-vectors-hybrid-search`](./s3-vectors-hybrid-search) | AI · Serverless · S3 Vectors · Hybrid search · RAG · Bedrock · Lambda · Serverless Framework · TypeScript | [S3 Vectors hybrid search: RAG with Lambda and TypeScript](https://sascha-ms.de/en/s3-vectors-hybrid-search) · [DE](https://sascha-ms.de/2026/3504-s3-vectors-hybridsuche) |
 | [`spec-driven-development`](./spec-driven-development) | AI · Spec-driven development · Spec Kit · Vitest · TypeScript | [Spec-driven development with AI: Spec Kit in practice](https://sascha-ms.de/en/spec-driven-development-ai) · [DE](https://sascha-ms.de/2026/3491-spec-driven-development-ki) |
 | [`bedrock-api-key-guard`](./bedrock-api-key-guard) | AI · Security · Bedrock API keys · CloudTrail · EventBridge · SNS · DynamoDB · Serverless Framework · TypeScript | [Secure Bedrock API keys: SCP, CloudTrail and alerts](https://sascha-ms.de/en/secure-bedrock-api-keys) · [DE](https://sascha-ms.de/2026/3479-bedrock-api-keys-absichern) |
