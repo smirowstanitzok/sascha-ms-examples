@@ -1,0 +1,20 @@
+{
+  "name": "durable-brake",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "brake": "tsx src/cli.ts",
+    "test": "node --import tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-lambda": "^3.1171.0",
+    "@aws/durable-execution-sdk-js": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
