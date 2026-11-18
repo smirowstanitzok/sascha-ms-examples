@@ -14,7 +14,7 @@
     "@types/node": "^22.20.5",
     "osls": "4.6.0",
     "serverless": "4.46.0",
-    "typescript": "5.9.3",
+    "typescript": "7.0.2",
     "vitest": "5.1.0"
   }
 }
