@@ -1,0 +1,65 @@
+# serverless.yml
+service: ticket-shop-receipts
+frameworkVersion: '4'
+
+params:
+  default:
+    # Enter two subnets in different AZs and a security group
+    subnetA: subnet-aaaa1111
+    subnetB: subnet-bbbb2222
+    securityGroup: sg-cccc3333
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64       # must match the capacity provider
+  region: eu-central-1
+  memorySize: 2048
+  timeout: 30
+  versionFunctions: false   # no numbered versions, see LMI basics
+
+functions:
+  createReceipt:
+    handler: src/handler.handler
+
+resources:
+  Resources:
+    ReceiptOperatorRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: { Service: lambda.amazonaws.com }
+              Action: sts:AssumeRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/AWSLambdaManagedEC2ResourceOperator
+
+    ReceiptCapacityProvider:
+      Type: AWS::Lambda::CapacityProvider
+      Properties:
+        CapacityProviderName: ${self:service}-${sls:stage}
+        PermissionsConfig:
+          CapacityProviderOperatorRoleArn: !GetAtt ReceiptOperatorRole.Arn
+        VpcConfig:
+          SubnetIds: [ '${param:subnetA}', '${param:subnetB}' ]
+          SecurityGroupIds: [ '${param:securityGroup}' ]
+        InstanceRequirements:
+          Architectures: [ arm64 ]
+        CapacityProviderScalingConfig:
+          MaxVCpuCount: 8   # cost brake
+
+  extensions:
+    CreateReceiptLambdaFunction:
+      Properties:
+        CapacityProviderConfig:
+          LambdaManagedInstancesCapacityProviderConfig:
+            CapacityProviderArn: !GetAtt ReceiptCapacityProvider.Arn
+            # Upper limit of concurrent invocations per execution environment.
+            # Keep it high on purpose for the dev load test so bugs show up.
+            PerExecutionEnvironmentMaxConcurrency: 64
+        PublishToLatestPublished: true
+        FunctionScalingConfig:
+          MinExecutionEnvironments: 0
+          MaxExecutionEnvironments: 2
