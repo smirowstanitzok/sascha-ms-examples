@@ -1,0 +1,23 @@
+{
+  "name": "dynamodb-caching",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Book catalog API with DynamoDB caching (ElastiCache Serverless for Valkey), Lambda and the Serverless Framework",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "deploy": "serverless deploy"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@aws-sdk/aws-elasticache-integration-client": "^1.0.0",
+    "@aws-sdk/client-dynamodb": "^3.1171.0",
+    "@aws-sdk/util-dynamodb": "^3.1171.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,76 @@
+# serverless.yml
+service: library-catalog
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 512
+  timeout: 10
+  environment:
+    BOOKS_TABLE: ${self:service}-${sls:stage}-books
+    CACHE_NAME: ${param:cacheName}
+    CACHE_ENDPOINT: ${param:cacheEndpoint}
+  vpc:
+    securityGroupIds:
+      - ${param:lambdaSecurityGroupId}
+    subnetIds:
+      - ${param:subnetA}
+      - ${param:subnetB}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:Query
+          Resource: !GetAtt BooksTable.Arn
+        - Effect: Allow
+          Action: elasticache:Connect
+          Resource:
+            - arn:aws:elasticache:${aws:region}:${aws:accountId}:serverlesscache:${param:cacheName}
+            - arn:aws:elasticache:${aws:region}:${aws:accountId}:user:default.iam-user
+
+functions:
+  getBook:
+    handler: src/books.getBook
+    events:
+      - httpApi: GET /authors/{authorId}/books/{isbn}
+  listBooksByAuthor:
+    handler: src/books.listBooksByAuthor
+    events:
+      - httpApi: GET /authors/{authorId}/books
+  putBook:
+    handler: src/books.putBook
+    events:
+      - httpApi: PUT /authors/{authorId}/books/{isbn}
+
+resources:
+  Resources:
+    BooksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.BOOKS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: authorId
+            AttributeType: S
+          - AttributeName: isbn
+            AttributeType: S
+        KeySchema:
+          - AttributeName: authorId
+            KeyType: HASH
+          - AttributeName: isbn
+            KeyType: RANGE
+    # Lambda runs in the VPC: uncached requests and the fallback need a route to DynamoDB
+    DynamoDbGatewayEndpoint:
+      Type: AWS::EC2::VPCEndpoint
+      Properties:
+        VpcId: ${param:vpcId}
+        ServiceName: com.amazonaws.${aws:region}.dynamodb
+        VpcEndpointType: Gateway
+        RouteTableIds:
+          - ${param:routeTableId}
