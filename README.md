@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`access-denied-debugging`](./access-denied-debugging) | Serverless · IAM · Access Troubleshooter · Lambda · SQS · Serverless Framework · TypeScript | [Debug AccessDenied errors with IAM Access Troubleshooter](https://sascha-ms.de/en/debug-accessdenied-errors-iam-access-troubleshooter) · [DE](https://sascha-ms.de/2026/3679-accessdenied-debuggen-iam-access-troubleshooter) |
 | [`agentcore-session-recap`](./agentcore-session-recap) | AI · Serverless · Bedrock AgentCore Memory · Session summaries · Converse · Serverless Framework · TypeScript | [AgentCore Memory session summaries for AI agents](https://sascha-ms.de/en/agentcore-memory-session-summaries) · [DE](https://sascha-ms.de/2026/3650-agentcore-memory-sitzungszusammenfassung) |
 | [`durable-execution-brake`](./durable-execution-brake) | Serverless · Lambda durable functions · pause, resume, delete executions · IAM · TypeScript | [How to pause durable functions in AWS Lambda](https://sascha-ms.de/en/pause-durable-functions) · [DE](https://sascha-ms.de/2026/3639-durable-functions-pausieren) |
 | [`kinesis-queues-consumer`](./kinesis-queues-consumer) | Serverless · Kinesis Data Streams queues · Fargate · DynamoDB idempotency · AWS CDK · TypeScript | [Kinesis Data Streams queues: workers without shard leases](https://sascha-ms.de/en/kinesis-data-streams-queues) · [DE](https://sascha-ms.de/2026/3626-kinesis-data-streams-queues) |

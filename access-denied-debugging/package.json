@@ -1,0 +1,21 @@
+{
+  "name": "access-denied-debugging",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Debug AccessDenied errors with IAM Access Troubleshooter (example from sascha-ms.de)",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "node --import tsx --test test/*.test.ts",
+    "explain": "tsx src/explain-denied.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-iam-toolbox": "^3.1172.0",
+    "@aws-sdk/client-sqs": "^3.1172.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^22.20.5",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
