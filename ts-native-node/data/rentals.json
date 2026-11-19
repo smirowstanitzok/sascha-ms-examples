@@ -1,0 +1,6 @@
+[
+  { "id": "a1", "bike": "city", "hours": 2, "member": false },
+  { "id": "a2", "bike": "ebike", "hours": 7, "member": true },
+  { "id": "a3", "bike": "cargo", "hours": 26, "member": false },
+  { "id": "a4", "bike": "city", "hours": 0.5, "member": true }
+]

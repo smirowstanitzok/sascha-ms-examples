@@ -1,0 +1,27 @@
+# serverless.yml
+service: bike-rental-quote
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 256
+  timeout: 5
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap:
+      type: linked
+      setNodeOptions: true
+
+functions:
+  quote:
+    handler: src/handler.quote
+    events:
+      - httpApi:
+          path: /quote
+          method: post

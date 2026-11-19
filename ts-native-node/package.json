@@ -1,0 +1,20 @@
+{
+  "name": "ts-native-node",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.18.0" },
+  "imports": {
+    "#src/*": "./src/*"
+  },
+  "scripts": {
+    "check": "tsc",
+    "test": "node --test",
+    "report": "node scripts/price-report.ts data/rentals.json",
+    "verify": "npm run check && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "typescript": "^7.0.2"
+  }
+}
