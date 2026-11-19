@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`lambda-customer-managed-runtime`](./lambda-customer-managed-runtime) | Serverless · AWS Lambda · customer-managed runtimes · Amazon ECR · AWS CDK · Serverless Framework | [Lambda customer-managed runtimes: one runtime for all](https://sascha-ms.de/en/lambda-customer-managed-runtimes) · [DE](https://sascha-ms.de/2026/3721-lambda-customer-managed-runtimes) |
 | [`ts-native-node`](./ts-native-node) | TypeScript · Node.js · type stripping · node:test · AWS CDK · Serverless Framework | [Node.js Type Stripping: Run TypeScript Without a Build](https://sascha-ms.de/en/node-js-type-stripping-typescript) · [DE](https://sascha-ms.de/2026/3708-node-js-type-stripping-typescript) |
 | [`aws-mcp-agent-guardrails`](./aws-mcp-agent-guardrails) | AI · AWS MCP Server · Agent Toolkit · IAM condition keys · Budgets · AWS CDK · TypeScript | [AWS MCP Server: Connect AI Agents to AWS Safely](https://sascha-ms.de/en/aws-mcp-server-ai-agents-guardrails) · [DE](https://sascha-ms.de/2026/3695-aws-mcp-server-ki-agenten-absichern) |
 | [`access-denied-debugging`](./access-denied-debugging) | Serverless · IAM · Access Troubleshooter · Lambda · SQS · Serverless Framework · TypeScript | [Debug AccessDenied errors with IAM Access Troubleshooter](https://sascha-ms.de/en/debug-accessdenied-errors-iam-access-troubleshooter) · [DE](https://sascha-ms.de/2026/3679-accessdenied-debuggen-iam-access-troubleshooter) |

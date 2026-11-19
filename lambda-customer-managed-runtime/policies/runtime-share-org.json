@@ -1,0 +1,21 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowOrganizationToUseRuntime",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [
+        "lambda:AssociateRuntimeAlias",
+        "lambda:AssociateRuntimeVersion"
+      ],
+      "Resource": [
+        "arn:aws:lambda:eu-central-1:111111111111:runtime/radwerk-node24/alias/*",
+        "arn:aws:lambda:eu-central-1:111111111111:runtime/radwerk-node24/version/*"
+      ],
+      "Condition": {
+        "StringEquals": { "aws:PrincipalOrgID": "o-exampleorg1" }
+      }
+    }
+  ]
+}

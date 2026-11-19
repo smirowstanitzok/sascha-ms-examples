@@ -1,0 +1,8 @@
+{
+  "name": "@radwerk/logger",
+  "version": "1.0.0",
+  "description": "Structured JSON logger provided by the radwerk runtime",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "rental-consumer-sls",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc --noEmit",
+    "package": "serverless package --stage prod"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.9.0"
+  }
+}

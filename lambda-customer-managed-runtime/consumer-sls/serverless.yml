@@ -1,0 +1,39 @@
+# serverless.yml
+service: rental
+
+provider:
+  name: aws
+  region: eu-central-1
+  stage: ${opt:stage, 'dev'}
+  # Needed so the framework bundles for Node.js – overridden below
+  runtime: nodejs24.x
+  architecture: arm64
+  memorySize: 512
+  timeout: 10
+
+custom:
+  # ARN of the runtime (not of the alias) – the alias equals the stage
+  runtimeArn: arn:aws:lambda:eu-central-1:111111111111:runtime/radwerk-node24
+
+build:
+  esbuild:
+    bundle: true
+    minify: false
+    # provided by the runtime image, so not bundled
+    external:
+      - '@radwerk/logger'
+      - '@aws-sdk/*'
+
+functions:
+  rentBike:
+    handler: src/rent-bike.handler
+
+resources:
+  extensions:
+    # Logical ID that the framework generates for the function "rentBike"
+    RentBikeLambdaFunction:
+      Properties:
+        Runtime: custom
+        RuntimeConfig:
+          RuntimeArn: ${self:custom.runtimeArn}
+          RuntimeAlias: ${sls:stage}

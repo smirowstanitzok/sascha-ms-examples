@@ -1,0 +1,19 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LambdaReadAccess",
+      "Effect": "Allow",
+      "Principal": { "Service": "lambda.amazonaws.com" },
+      "Action": [
+        "ecr:BatchGetImage",
+        "ecr:DescribeImages",
+        "ecr:GetDownloadUrlForLayer"
+      ],
+      "Condition": {
+        "StringEquals": { "aws:SourceAccount": "ACCOUNT_ID" },
+        "ArnLike": { "aws:SourceArn": "arn:aws:lambda:REGION:ACCOUNT_ID:runtime/*" }
+      }
+    }
+  ]
+}
