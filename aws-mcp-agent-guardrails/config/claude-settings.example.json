@@ -1,0 +1,7 @@
+{
+  "env": { "AWS_PROFILE": "agent" },
+  "permissions": {
+    "ask": ["Bash(npx cdk deploy:*)", "Bash(aws:*)"],
+    "deny": ["Bash(aws configure:*)", "Read(~/.aws/**)"]
+  }
+}

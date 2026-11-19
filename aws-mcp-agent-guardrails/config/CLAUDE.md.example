@@ -1,0 +1,7 @@
+## AWS rules for this project
+
+- Use the AWS MCP Server (aws-mcp) for AWS questions and API calls. Read the current AWS documentation before using a service you have not used in this project.
+- Work only in eu-central-1 and only with the AWS profile "agent". Never change ~/.aws/config or ~/.aws/credentials.
+- Infrastructure changes go through code (AWS CDK in this repository) and `npx cdk diff` first. Show me the diff and wait for my OK before `npx cdk deploy`.
+- Never delete resources, never create IAM users or access keys, never touch billing or account settings.
+- If a call fails with AccessDenied, stop and tell me which action and resource were denied. Do not look for a workaround.

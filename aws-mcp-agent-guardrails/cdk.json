@@ -1,0 +1,8 @@
+{
+  "app": "npx tsx bin/app.ts",
+  "context": {
+    "allowedRegion": "eu-central-1",
+    "budgetEmail": "you@example.com",
+    "monthlyBudgetUsd": 20
+  }
+}
