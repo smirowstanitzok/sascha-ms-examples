@@ -1,0 +1,8 @@
+exports[`return handler > returns a stable response shape 1`] = `
+{
+  "ausleiheId": "a-42",
+  "radId": "rad-7",
+  "zurueckAm": "2026-05-02T11:15:00.000Z",
+  "gebuehrCent": 900
+}
+`;
