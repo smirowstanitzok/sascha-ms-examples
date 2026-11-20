@@ -1,0 +1,66 @@
+# serverless.yml
+service: photo-book-renderer
+frameworkVersion: '4'
+
+# The framework schema still only knows 900 seconds: warn instead of failing
+configValidationMode: warn
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  memorySize: 2048
+  logRetentionInDays: 14
+  environment:
+    CHECKPOINT_TABLE: !Ref CheckpointTable
+    RENDER_QUEUE_URL: !Ref RenderQueue
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+          Resource: !GetAtt CheckpointTable.Arn
+        - Effect: Allow
+          Action: sqs:SendMessage
+          Resource: !GetAtt RenderQueue.Arn
+
+functions:
+  renderPhotoBook:
+    handler: src/index.handler
+    timeout: 1800 # 30 minutes
+    events:
+      - sqs:
+          arn: !GetAtt RenderQueue.Arn
+          batchSize: 1
+          functionResponseType: ReportBatchItemFailures
+
+resources:
+  Resources:
+    RenderQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        VisibilityTimeout: 10800 # 6 x 1800 seconds
+        MessageRetentionPeriod: 345600
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt RenderDlq.Arn
+          maxReceiveCount: 3
+    RenderDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        MessageRetentionPeriod: 1209600
+    CheckpointTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: orderId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: orderId
+            KeyType: HASH
+        TimeToLiveSpecification:
+          AttributeName: expiresAt
+          Enabled: true
