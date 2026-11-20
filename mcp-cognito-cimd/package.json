@@ -1,0 +1,19 @@
+{
+  "name": "bookstore-mcp-cimd",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts",
+    "deploy": "serverless deploy"
+  },
+  "dependencies": {
+    "aws-jwt-verify": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3"
+  }
+}

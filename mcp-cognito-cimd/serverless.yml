@@ -1,0 +1,89 @@
+# serverless.yml
+service: bookstore-mcp
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 512
+  timeout: 10
+  logRetentionInDays: 14
+  environment:
+    ISSUER: !Join ["", ["https://cognito-idp.", !Ref AWS::Region, ".amazonaws.com/", !Ref McpUserPool]]
+    MCP_RESOURCE: !Join ["", [!GetAtt HttpApi.ApiEndpoint, "/mcp"]]
+    REQUIRED_SCOPE: bookstore-mcp/tools.read
+
+build:
+  esbuild:
+    bundle: true
+    minify: false
+
+functions:
+  mcp:
+    handler: src/handler.main
+    events:
+      - httpApi:
+          method: POST
+          path: /mcp
+      - httpApi:
+          method: GET
+          path: /.well-known/oauth-protected-resource/{proxy+}
+      - httpApi:
+          method: GET
+          path: /.well-known/oauth-protected-resource
+
+resources:
+  Resources:
+    McpUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: bookstore-mcp-users
+        UserPoolTier: ESSENTIALS # CIMD and DCR are only available in Essentials and Plus
+        UsernameAttributes: [email]
+        AutoVerifiedAttributes: [email]
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+
+    McpUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        UserPoolId: !Ref McpUserPool
+        Domain: !Join ["-", ["bookstore-mcp", !Ref AWS::AccountId]]
+
+    McpResourceServer:
+      Type: AWS::Cognito::UserPoolResourceServer
+      Properties:
+        UserPoolId: !Ref McpUserPool
+        Identifier: bookstore-mcp
+        Name: Bookstore MCP
+        Scopes:
+          - ScopeName: tools.read
+            ScopeDescription: May call read tools of the bookstore MCP server
+
+    # Base app client for the CIMD policy: defines grant types and scopes
+    McpCimdBaseClient:
+      Type: AWS::Cognito::UserPoolClient
+      DependsOn: McpResourceServer
+      Properties:
+        UserPoolId: !Ref McpUserPool
+        ClientName: mcp-cimd-base
+        GenerateSecret: false
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthFlows: [code]
+        AllowedOAuthScopes: [openid, bookstore-mcp/tools.read]
+        CallbackURLs: ["http://localhost:8765/callback"]
+        SupportedIdentityProviders: [COGNITO]
+        AccessTokenValidity: 60
+        TokenValidityUnits:
+          AccessToken: minutes
+
+  Outputs:
+    UserPoolId:
+      Value: !Ref McpUserPool
+    CimdBaseClientId:
+      Value: !Ref McpCimdBaseClient
+    McpUrl:
+      Value: !Join ["", [!GetAtt HttpApi.ApiEndpoint, "/mcp"]]
+    Issuer:
+      Value: !Join ["", ["https://cognito-idp.", !Ref AWS::Region, ".amazonaws.com/", !Ref McpUserPool]]
