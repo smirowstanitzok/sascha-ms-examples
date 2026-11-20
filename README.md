@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`lambda-30-minute-timeout`](./lambda-30-minute-timeout) | Serverless · AWS Lambda · 30-minute timeout · SQS · DynamoDB · Serverless Framework · AWS CDK · TypeScript | [Lambda 30 minute timeout: what to check now](https://sascha-ms.de/en/lambda-30-minute-timeout) · [DE](https://sascha-ms.de/2026/3792-lambda-30-minuten-timeout) |
 | [`node-test-runner-lambda`](./node-test-runner-lambda) | TypeScript · Node.js 24 · node:test · AWS Lambda · DynamoDB · Testing | [Node.js test runner: test Lambda handlers without Jest](https://sascha-ms.de/en/node-js-test-runner-lambda) · [DE](https://sascha-ms.de/2026/3779-node-js-test-runner-lambda) |
 | [`lambda-customer-managed-runtime`](./lambda-customer-managed-runtime) | Serverless · AWS Lambda · customer-managed runtimes · Amazon ECR · AWS CDK · Serverless Framework | [Lambda customer-managed runtimes: one runtime for all](https://sascha-ms.de/en/lambda-customer-managed-runtimes) · [DE](https://sascha-ms.de/2026/3721-lambda-customer-managed-runtimes) |
 | [`ts-native-node`](./ts-native-node) | TypeScript · Node.js · type stripping · node:test · AWS CDK · Serverless Framework | [Node.js Type Stripping: Run TypeScript Without a Build](https://sascha-ms.de/en/node-js-type-stripping-typescript) · [DE](https://sascha-ms.de/2026/3708-node-js-type-stripping-typescript) |
