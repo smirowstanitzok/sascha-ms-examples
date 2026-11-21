@@ -1,0 +1,182 @@
+# serverless.yml
+service: radwerk-events
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 256
+  timeout: 10
+  logRetentionInDays: 14
+  environment:
+    EVENT_BUS_ARN: !Ref RentalBus
+  iam:
+    role:
+      statements:
+        # The publisher may write to exactly this bus (namespace events, not eventsv2)
+        - Effect: Allow
+          Action: events:PutEvents
+          Resource: !Ref RentalBus
+
+functions:
+  returnBike:
+    handler: src/return-bike.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /returns
+  billing:
+    handler: src/billing.handler
+    events:
+      - sqs:
+          arn: !GetAtt BillingQueue.Arn
+          batchSize: 10
+          functionResponseType: ReportBatchItemFailures
+  maintenance:
+    handler: src/maintenance.handler
+
+resources:
+  Resources:
+    RentalBus:
+      Type: AWS::EventsV2::EventBus
+      Properties:
+        Name: radwerk-rental-${sls:stage}
+        Description: Returns and rentals of the bike rental
+        StorageConfiguration:
+          RetentionPeriodInDays: 7
+
+    BillingQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: radwerk-billing-${sls:stage}.fifo
+        FifoQueue: true
+        VisibilityTimeout: 60
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt BillingQueueDlq.Arn
+          maxReceiveCount: 5
+
+    BillingQueueDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: radwerk-billing-dlq-${sls:stage}.fifo
+        FifoQueue: true
+        MessageRetentionPeriod: 1209600
+
+    # Events a subscriber could not deliver after all retries end up here
+    SubscriberDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: radwerk-subscriber-dlq-${sls:stage}
+        MessageRetentionPeriod: 1209600
+
+    DeliveryRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: events.amazonaws.com
+              Action: sts:AssumeRole
+              Condition:
+                StringEquals:
+                  aws:SourceAccount: !Ref AWS::AccountId
+                ArnLike:
+                  aws:SourceArn: !Sub arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:subscriber/*
+        Policies:
+          - PolicyName: deliver
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: sqs:SendMessage
+                  Resource:
+                    - !GetAtt BillingQueue.Arn
+                    - !GetAtt StatsQueue.Arn
+                    - !GetAtt SubscriberDlq.Arn
+                - Effect: Allow
+                  Action: lambda:InvokeFunction
+                  Resource: !GetAtt MaintenanceLambdaFunction.Arn
+
+    # Billing: all returns, strictly ordered per customer
+    BillingSubscriber:
+      Type: AWS::EventsV2::Subscriber
+      Properties:
+        Name: billing-${sls:stage}
+        EventBusArn: !Ref RentalBus
+        Type: FIFO
+        FilterConfiguration:
+          Filters:
+            - Scope: DATA
+              Pattern: '{"source":["radwerk.rental"],"detail-type":["BikeReturned"]}'
+        InvokeConfiguration:
+          TargetArn: !GetAtt BillingQueue.Arn
+          RoleArn: !GetAtt DeliveryRole.Arn
+          SqsParameters:
+            MessageGroupId: '{% $events.SystemMetadata.EventGroupId %}'
+            MessageDeduplicationId: '{% $events.SystemMetadata.DeduplicationId %}'
+        RetryPolicy:
+          MaxRetryAttempts: 10
+          MaxEventAgeInSeconds: 3600
+        OnFailureConfiguration:
+          Arn: !GetAtt SubscriberDlq.Arn
+        LogConfiguration:
+          Level: ERROR
+
+    # Maintenance: only bikes that have ridden 500 km or more since their last service
+    MaintenanceSubscriber:
+      Type: AWS::EventsV2::Subscriber
+      Properties:
+        Name: maintenance-${sls:stage}
+        EventBusArn: !Ref RentalBus
+        FilterConfiguration:
+          Filters:
+            - Scope: DATA
+              Pattern: '{"detail-type":["BikeReturned"],"detail":{"kmSinceService":[{"numeric":[">=",500]}]}}'
+        InvokeConfiguration:
+          TargetArn: !GetAtt MaintenanceLambdaFunction.Arn
+          RoleArn: !GetAtt DeliveryRole.Arn
+        RetryPolicy:
+          MaxRetryAttempts: 5
+          MaxEventAgeInSeconds: 3600
+        OnFailureConfiguration:
+          Arn: !GetAtt SubscriberDlq.Arn
+        LogConfiguration:
+          Level: ERROR
+
+    # Step 8: stats that read all retained events when created
+    StatsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: radwerk-stats-${sls:stage}
+
+    StatsSubscriber:
+      Type: AWS::EventsV2::Subscriber
+      Properties:
+        Name: stats-${sls:stage}
+        EventBusArn: !Ref RentalBus
+        StartingPosition: POINT_IN_TIME
+        PointInTimeConfiguration:
+          PointType: HORIZON
+        Transformer:
+          Type: WITH_METADATA
+        FilterConfiguration:
+          Filters:
+            - Scope: DATA
+              Pattern: '{"detail-type":["BikeReturned"]}'
+        InvokeConfiguration:
+          TargetArn: !GetAtt StatsQueue.Arn
+          RoleArn: !GetAtt DeliveryRole.Arn
+        OnFailureConfiguration:
+          Arn: !GetAtt SubscriberDlq.Arn
+        LogConfiguration:
+          Level: ERROR
+
+  Outputs:
+    RentalBusArn:
+      Value: !Ref RentalBus
+    StatsQueueUrl:
+      Value: !Ref StatsQueue

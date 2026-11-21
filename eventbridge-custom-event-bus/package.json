@@ -1,0 +1,21 @@
+{
+  "name": "eventbridge-new-event-bus",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Bike rental example for the new EventBridge custom event bus (Serverless Framework, TypeScript)",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts",
+    "deploy": "serverless deploy"
+  },
+  "dependencies": {
+    "@aws-sdk/client-eventbridgev2": "^3.1175.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.150",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
