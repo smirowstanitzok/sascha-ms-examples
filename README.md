@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`cloudfront-functions-fetch`](./cloudfront-functions-fetch) | AI agents · CloudFront Functions · cf.fetch · Lambda function URLs · OAC · DynamoDB · AWS CDK · TypeScript | [CloudFront Functions fetch: check AI agents at the edge](https://sascha-ms.de/en/cloudfront-functions-fetch) · [DE](https://sascha-ms.de/2026/3861-cloudfront-functions-fetch) |
 | [`bedrock-guardrails-lambda`](./bedrock-guardrails-lambda) | AI · Amazon Bedrock · Guardrails · PII · Prompt injection · AWS Lambda · Serverless Framework · TypeScript | [Bedrock Guardrails with Lambda: filter PII and prompt attacks](https://sascha-ms.de/en/bedrock-guardrails-lambda) · [DE](https://sascha-ms.de/2026/3848-bedrock-guardrails-lambda) |
 | [`mcp-cognito-cimd`](./mcp-cognito-cimd) | AI · MCP · Amazon Cognito · OAuth · CIMD · AWS Lambda · Serverless Framework · TypeScript | [Secure an MCP server with Cognito: CIMD instead of DCR](https://sascha-ms.de/en/mcp-server-cognito-cimd) · [DE](https://sascha-ms.de/2026/3807-mcp-server-mit-cognito-cimd) |
 | [`lambda-30-minute-timeout`](./lambda-30-minute-timeout) | Serverless · AWS Lambda · 30-minute timeout · SQS · DynamoDB · Serverless Framework · AWS CDK · TypeScript | [Lambda 30 minute timeout: what to check now](https://sascha-ms.de/en/lambda-30-minute-timeout) · [DE](https://sascha-ms.de/2026/3792-lambda-30-minuten-timeout) |
