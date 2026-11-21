@@ -1,0 +1,87 @@
+# serverless.yml
+service: speichenwerk-support
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 512
+  timeout: 30
+  logRetentionInDays: 14
+  environment:
+    GUARDRAIL_ID: !GetAtt SupportGuardrail.GuardrailId
+    GUARDRAIL_VERSION: !GetAtt SupportGuardrailVersion.Version
+    MODEL_ID: eu.anthropic.claude-haiku-4-5-20251001-v1:0
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: bedrock:ApplyGuardrail
+          Resource:
+            - !GetAtt SupportGuardrail.GuardrailArn
+            # Standard tier: allow the profile in every destination Region
+            - arn:aws:bedrock:eu-central-1:${aws:accountId}:guardrail-profile/eu.guardrail.v1:0
+            - arn:aws:bedrock:eu-west-1:${aws:accountId}:guardrail-profile/eu.guardrail.v1:0
+            - arn:aws:bedrock:eu-west-3:${aws:accountId}:guardrail-profile/eu.guardrail.v1:0
+            - arn:aws:bedrock:eu-north-1:${aws:accountId}:guardrail-profile/eu.guardrail.v1:0
+        - Effect: Allow
+          Action: bedrock:InvokeModel
+          Resource:
+            - arn:aws:bedrock:eu-central-1:${aws:accountId}:inference-profile/eu.anthropic.claude-haiku-4-5-20251001-v1:0
+            - arn:aws:bedrock:*::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0
+
+functions:
+  chat:
+    handler: src/handler.handler
+    url: true
+
+resources:
+  Resources:
+    SupportGuardrail:
+      Type: AWS::Bedrock::Guardrail
+      Properties:
+        Name: speichenwerk-support-${sls:stage}
+        Description: Safety layer for the bike rental support chat
+        BlockedInputMessaging: Sorry, I cannot help with that. Feel free to ask me about rentals, prices or breakdown help.
+        BlockedOutputsMessaging: Sorry, I cannot answer that. Please contact our team in the shop.
+        CrossRegionConfig:
+          GuardrailProfileArn: arn:aws:bedrock:${aws:region}:${aws:accountId}:guardrail-profile/eu.guardrail.v1:0
+        ContentPolicyConfig:
+          ContentFiltersTierConfig:
+            TierName: STANDARD
+          FiltersConfig:
+            - { Type: PROMPT_ATTACK, InputStrength: HIGH, OutputStrength: NONE }
+            - { Type: HATE, InputStrength: MEDIUM, OutputStrength: HIGH }
+            - { Type: INSULTS, InputStrength: LOW, OutputStrength: HIGH }
+            - { Type: SEXUAL, InputStrength: MEDIUM, OutputStrength: HIGH }
+            - { Type: VIOLENCE, InputStrength: MEDIUM, OutputStrength: HIGH }
+            - { Type: MISCONDUCT, InputStrength: MEDIUM, OutputStrength: HIGH }
+        TopicPolicyConfig:
+          TopicsTierConfig:
+            TierName: STANDARD
+          TopicsConfig:
+            - Name: Legal advice
+              Type: DENY
+              Definition: Legal assessments of liability, accidents, insurance claims or damages.
+              Examples:
+                - Do I have to pay if someone crashes into my rented bike?
+                - Who is liable for an accident with a rental bike?
+        SensitiveInformationPolicyConfig:
+          PiiEntitiesConfig:
+            - { Type: EMAIL, Action: ANONYMIZE }
+            - { Type: PHONE, Action: ANONYMIZE }
+            - { Type: NAME, Action: ANONYMIZE }
+            - { Type: CREDIT_DEBIT_CARD_NUMBER, Action: BLOCK }
+            - { Type: INTERNATIONAL_BANK_ACCOUNT_NUMBER, Action: BLOCK }
+          RegexesConfig:
+            - Name: CustomerNumber
+              Description: Customer numbers in the format SW-123456
+              Pattern: 'SW-\d{6}'
+              Action: ANONYMIZE
+
+    SupportGuardrailVersion:
+      Type: AWS::Bedrock::GuardrailVersion
+      Properties:
+        GuardrailIdentifier: !GetAtt SupportGuardrail.GuardrailId
+        Description: First released version
