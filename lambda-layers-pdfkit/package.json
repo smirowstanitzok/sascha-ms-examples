@@ -13,7 +13,7 @@
   "devDependencies": {
     "@aws-lambda-powertools/logger": "2.36.0",
     "@types/aws-lambda": "8.10.164",
-    "@types/node": "24.19.2",
+    "@types/node": "26.6.6",
     "@types/pdfkit": "0.17.7",
     "esbuild": "0.28.2",
     "pdfkit": "0.20.2",

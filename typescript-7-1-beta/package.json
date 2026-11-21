@@ -8,6 +8,6 @@
     "check:runtime": "node scripts/es2026-check.mjs"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0"
+    "@types/node": "^26.0.0"
   }
 }
