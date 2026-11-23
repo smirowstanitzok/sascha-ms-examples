@@ -1,0 +1,56 @@
+# serverless.yml
+service: bike-rental-webhooks
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 256
+  timeout: 10
+  environment:
+    SECRET_PARAM: /bike-rental/webhooks/partner-secret
+    KEY_CACHE_SECONDS: "60"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ssm:GetParameters
+            - ssm:GetParameterHistory
+          Resource: arn:aws:ssm:${aws:region}:${aws:accountId}:parameter/bike-rental/webhooks/partner-secret
+        - Effect: Allow
+          Action:
+            - ssm:PutParameter
+            - ssm:LabelParameterVersion
+            - ssm:UnlabelParameterVersion
+          Resource: arn:aws:ssm:${aws:region}:${aws:accountId}:parameter/bike-rental/webhooks/partner-secret
+        # SecureString with the AWS managed key aws/ssm
+        - Effect: Allow
+          Action:
+            - kms:Decrypt
+            - kms:Encrypt
+          Resource: "*"
+          Condition:
+            StringEquals:
+              kms:ViaService: ssm.${aws:region}.amazonaws.com
+
+functions:
+  receiver:
+    handler: src/receiver.handler
+    url: true
+
+  sender:
+    handler: src/sender.handler
+    environment:
+      TARGET_URL: https://partner.example.com/webhooks/bike-rental
+
+  rotate:
+    handler: src/rotation.rotateHandler
+
+  retire:
+    handler: src/rotation.retireHandler
+    environment:
+      OVERLAP_HOURS: "24"
+    events:
+      - schedule: rate(1 hour)
