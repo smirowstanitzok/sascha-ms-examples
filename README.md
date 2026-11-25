@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`sts-scoped-credentials-agent`](./sts-scoped-credentials-agent) | AI agents · AWS STS GetScopedCredentials · IAM · Lambda · Bedrock · AWS CDK · TypeScript | [AWS GetScopedCredentials: Least Privilege for AI Agents](https://sascha-ms.de/en/aws-getscopedcredentials-ai-agents) · [DE](https://sascha-ms.de/2026/3994-aws-getscopedcredentials-ki-agenten) |
 | [`webhook-secret-rotation`](./webhook-secret-rotation) | Serverless · Webhooks · SSM Parameter Store · Lambda · Serverless Framework · TypeScript | [Rotate a webhook secret without downtime](https://sascha-ms.de/en/rotate-webhook-secret) · [DE](https://sascha-ms.de/2026/3938-webhook-secret-rotieren) |
 | [`websocket-live-ticker`](./websocket-live-ticker) | Serverless · API Gateway WebSocket API · AWS Lambda · DynamoDB · @connections · AWS CDK · TypeScript | [WebSocket API with Lambda: a live ticker step by step](https://sascha-ms.de/en/websocket-api-lambda-live-ticker) · [DE](https://sascha-ms.de/2026/3911-websocket-api-mit-lambda) |
 | [`eventbridge-custom-event-bus`](./eventbridge-custom-event-bus) | Serverless · EventBridge custom event bus · Subscribers · FIFO · Replay · SQS · Lambda · Serverless Framework · TypeScript | [EventBridge custom event bus: retention, FIFO, replay](https://sascha-ms.de/en/eventbridge-custom-event-bus) · [DE](https://sascha-ms.de/2026/3871-eventbridge-custom-event-bus) |
