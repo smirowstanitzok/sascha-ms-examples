@@ -1,0 +1,27 @@
+{
+  "name": "waf-ai-security-mcp",
+  "version": "1.0.0",
+  "description": "MCP server on Lambda behind API Gateway with AWS WAF AI Security",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "node --import tsx --test test/*.test.ts",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy && tsx scripts/ai-security.ts ${MODE:-observe}",
+    "probe": "tsx scripts/probe.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.1177.0",
+    "@aws-sdk/client-wafv2": "^3.1177.0",
+    "aws-cdk-lib": "^2.278.0",
+    "constructs": "^10.8.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^22.20.6",
+    "aws-cdk": "^2.1149.0",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "private": true
+}
