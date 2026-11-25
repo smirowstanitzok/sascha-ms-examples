@@ -1,0 +1,17 @@
+{
+  "version": "0",
+  "id": "4b1f0c62-9d1e-4f63-8a57-0c2d7f3e9a10",
+  "detail-type": "Event Function Version Update Failed",
+  "source": "aws.lambda",
+  "account": "111122223333",
+  "time": "2026-11-25T08:15:00Z",
+  "region": "eu-central-1",
+  "resources": ["arn:aws:lambda:eu-central-1:111122223333:function:radwerk-rentals:$LATEST"],
+  "detail": {
+    "action": "UpdateFunctionConfiguration",
+    "state": "Active",
+    "lastUpdateStatus": "Failed",
+    "lastUpdateStatusReasonCode": "SubnetOutOfIPAddresses",
+    "revisionId": "c41e7a0b-2f6d-4b8e-9a31-5d7c0e2b8f44"
+  }
+}

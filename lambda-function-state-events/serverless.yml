@@ -1,0 +1,110 @@
+# serverless.yml
+service: radwerk-deploy-watch
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 256
+  timeout: 15
+  logRetentionInDays: 14
+  environment:
+    ALERT_TOPIC_ARN: !Ref DeployAlertTopic
+    DEDUPE_TABLE: !Ref DedupeTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: dynamodb:PutItem
+          Resource: !GetAtt DedupeTable.Arn
+        - Effect: Allow
+          Action: sns:Publish
+          Resource: !Ref DeployAlertTopic
+        - Effect: Allow
+          Action: lambda:GetFunctionConfiguration
+          Resource: !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:radwerk-*
+
+functions:
+  deployWatch:
+    handler: src/handler.main
+    events:
+      # Rule 1: failed activations and updates of all radwerk functions
+      - eventBridge:
+          name: radwerk-deploy-failed-${sls:stage}
+          pattern:
+            source:
+              - aws.lambda
+            detail-type:
+              - Event Function Version Activation Failed
+              - Event Function Version Update Failed
+            resources:
+              - prefix: arn:aws:lambda:${aws:region}:${aws:accountId}:function:radwerk-
+          retryPolicy:
+            maximumEventAge: 3600
+            maximumRetryAttempts: 10
+          deadLetterQueueArn: !GetAtt DeployWatchDlq.Arn
+      # Rule 2: newly published versions that are ready to invoke
+      - eventBridge:
+          name: radwerk-version-ready-${sls:stage}
+          pattern:
+            source:
+              - aws.lambda
+            detail-type:
+              - Event Function Version Activated
+            detail:
+              action:
+                - PublishVersion
+            resources:
+              - prefix: arn:aws:lambda:${aws:region}:${aws:accountId}:function:radwerk-
+          retryPolicy:
+            maximumEventAge: 3600
+            maximumRetryAttempts: 10
+          deadLetterQueueArn: !GetAtt DeployWatchDlq.Arn
+
+resources:
+  Resources:
+    DeployAlertTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: radwerk-deploy-alerts-${sls:stage}
+
+    DedupeTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        TimeToLiveSpecification:
+          AttributeName: expiresAt
+          Enabled: true
+
+    DeployWatchDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        MessageRetentionPeriod: 1209600
+
+    DeployWatchDlqPolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        Queues:
+          - !Ref DeployWatchDlq
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: events.amazonaws.com
+              Action: sqs:SendMessage
+              Resource: !GetAtt DeployWatchDlq.Arn
+              Condition:
+                ArnLike:
+                  aws:SourceArn: !Sub arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:rule/radwerk-*
+
+  Outputs:
+    DeployAlertTopicArn:
+      Value: !Ref DeployAlertTopic
