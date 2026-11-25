@@ -1,0 +1,25 @@
+{
+  "name": "api-portal-gap-scan",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "scan": "node src/cli.ts",
+    "deploy": "serverless deploy --param=\"reportEmail=you@example.com\""
+  },
+  "dependencies": {
+    "@aws-sdk/client-api-gateway": "^3.700.0",
+    "@aws-sdk/client-apigatewayv2": "^3.700.0",
+    "@aws-sdk/client-lambda": "^3.700.0",
+    "@aws-sdk/client-sns": "^3.700.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.8.0"
+  }
+}

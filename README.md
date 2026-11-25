@@ -6,6 +6,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
+| [`api-portal-gap-scan`](./api-portal-gap-scan) | API governance · AWS API Portal · Shadow APIs · HTTP API · Lambda function URLs · SNS · Serverless Framework · TypeScript | [AWS API Portal: Find and Secure Shadow APIs](https://sascha-ms.de/en/aws-api-portal-shadow-apis) · [DE](https://sascha-ms.de/2026/4037-aws-api-portal-schatten-apis) |
 | [`waf-ai-security-mcp`](./waf-ai-security-mcp) | AI security · AWS WAF AI Security · Bedrock Guardrails · MCP · API Gateway · Lambda · AWS CDK · TypeScript | [AWS WAF AI Security: Protect MCP Servers with Guardrails](https://sascha-ms.de/en/aws-waf-ai-security-mcp-servers) · [DE](https://sascha-ms.de/2026/4021-aws-waf-ai-security-mcp-server) |
 | [`lambda-function-state-events`](./lambda-function-state-events) | Serverless · Lambda · EventBridge · DynamoDB · SNS · Serverless Framework · TypeScript | [Lambda function state events: deployments without polling](https://sascha-ms.de/en/lambda-function-state-events) · [DE](https://sascha-ms.de/2026/4006-lambda-function-state-events) |
 | [`sts-scoped-credentials-agent`](./sts-scoped-credentials-agent) | AI agents · AWS STS GetScopedCredentials · IAM · Lambda · Bedrock · AWS CDK · TypeScript | [AWS GetScopedCredentials: Least Privilege for AI Agents](https://sascha-ms.de/en/aws-getscopedcredentials-ai-agents) · [DE](https://sascha-ms.de/2026/3994-aws-getscopedcredentials-ki-agenten) |

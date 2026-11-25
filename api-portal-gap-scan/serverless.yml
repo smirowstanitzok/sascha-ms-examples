@@ -1,0 +1,53 @@
+# serverless.yml
+service: api-portal-gap-scan
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: ${opt:region, 'eu-central-1'}
+  memorySize: 256
+  timeout: 120
+  logRetentionInDays: 30
+  environment:
+    REPORT_TOPIC_ARN: !Ref GapReportTopic
+  iam:
+    role:
+      statements:
+        # Read-only: list REST, HTTP and WebSocket APIs including routes
+        - Effect: Allow
+          Action: apigateway:GET
+          Resource:
+            - arn:aws:apigateway:${aws:region}::/restapis
+            - arn:aws:apigateway:${aws:region}::/restapis/*
+            - arn:aws:apigateway:${aws:region}::/apis
+            - arn:aws:apigateway:${aws:region}::/apis/*
+        - Effect: Allow
+          Action: lambda:ListFunctions
+          Resource: '*'
+        - Effect: Allow
+          Action: lambda:ListFunctionUrlConfigs
+          Resource: arn:aws:lambda:${aws:region}:${aws:accountId}:function:*
+        - Effect: Allow
+          Action: sns:Publish
+          Resource: !Ref GapReportTopic
+
+functions:
+  gapScan:
+    handler: src/handler.handler
+    events:
+      # Every Monday at 06:00 UTC
+      - schedule: cron(0 6 ? * MON *)
+
+resources:
+  Resources:
+    GapReportTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: ${self:service}-${sls:stage}-report
+    GapReportMail:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: !Ref GapReportTopic
+        Protocol: email
+        Endpoint: ${param:reportEmail}
