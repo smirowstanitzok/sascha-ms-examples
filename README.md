@@ -87,6 +87,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`api-gateway-cors`](./api-gateway-cors) | Serverless · API Gateway · Lambda · Serverless Framework · AWS CDK · TypeScript | [API Gateway CORS: fix preflight and function URL errors](https://sascha-ms.de/en/api-gateway-cors-preflight-function-urls) · [DE](https://sascha-ms.de/2026/3236-api-gateway-cors-lambda) |
 | [`cloudfront-api-same-origin`](./cloudfront-api-same-origin) | Serverless · CloudFront · API Gateway · Lambda · S3 · AWS CDK · TypeScript | [CloudFront in Front of API Gateway: No More CORS](https://sascha-ms.de/en/cloudfront-in-front-of-api-gateway) · [DE](https://sascha-ms.de/2026/3249-cloudfront-vor-api-gateway) |
 | [`lambda-layers-pdfkit`](./lambda-layers-pdfkit) | Serverless · Lambda · Lambda layers · Powertools · Serverless Framework · AWS CDK · TypeScript | [AWS Lambda layers: when they still pay off in 2026](https://sascha-ms.de/en/aws-lambda-layers) · [DE](https://sascha-ms.de/2026/3281-lambda-layers) |
+| [`durable-microvm-patch-check`](./durable-microvm-patch-check) | Serverless · Lambda durable functions · Lambda MicroVMs · AWS CDK · TypeScript | [Durable Functions MicroVMs: test AI code safely](https://sascha-ms.de/en/durable-functions-microvms) · [DE](https://sascha-ms.de/2026/4087-durable-functions-microvms) |
 
 ## How to use
 

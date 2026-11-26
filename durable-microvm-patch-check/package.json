@@ -1,0 +1,26 @@
+{
+  "name": "durable-microvm-patch-check",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "node --test --experimental-strip-types microvm/*.test.ts",
+    "synth": "cdk synth"
+  },
+  "dependencies": {
+    "@aws-sdk/client-lambda-microvms": "^3.1178.0",
+    "@aws/durable-execution-sdk-js": "^3.1.0",
+    "@aws/durable-execution-sdk-js-compute-worker": "0.1.0-alpha.0",
+    "@aws/durable-execution-sdk-js-extensions": "0.1.0-alpha.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "aws-cdk": "^2.1149.0",
+    "aws-cdk-lib": "^2.278.0",
+    "constructs": "^10.8.1",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}
