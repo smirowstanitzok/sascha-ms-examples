@@ -1,0 +1,45 @@
+# serverless.yml (excerpt under resources.Resources)
+KassenfuchsWebhookRole:
+  Type: AWS::IAM::Role
+  Properties:
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service: events.amazonaws.com
+          Action: sts:AssumeRole
+    Policies:
+      - PolicyName: webhook
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: events:PutWebhookEvents
+              Resource: !GetAtt PaymentBus.EventBusArn
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Sub arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:events-webhook!*
+
+KassenfuchsWebhook:
+  Type: AWS::EventsV2::EventSource
+  Properties:
+    Name: kassenfuchs-payments-${sls:stage}
+    EventBusArn: !GetAtt PaymentBus.EventBusArn
+    Configuration:
+      WebhookEventsConfiguration:
+        RoleArn: !GetAtt KassenfuchsWebhookRole.Arn
+        AuthConfiguration:
+          HmacAuthConfiguration:
+            Algorithm: SHA256
+            Encoding: BASE64
+            SignedMessageComposition: MESSAGE_ID_DOT_TIMESTAMP_DOT_BODY
+            SignatureHttpHeader: webhook-signature
+            SignaturePrefix: 'v1,'
+            Delimiter: ' '
+            MessageIdHttpHeader: webhook-id
+            TimestampHttpHeader: webhook-timestamp
+            TimestampToleranceInSeconds: 300
+            SecretEncoding: BASE64
+        DeduplicationConfiguration:
+          DeduplicationType: CONTENT_BASED
