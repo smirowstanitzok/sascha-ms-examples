@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:22-alpine
+FROM public.ecr.aws/docker/library/node:26-alpine
 WORKDIR /app
 COPY app.mjs .
 EXPOSE 8080
