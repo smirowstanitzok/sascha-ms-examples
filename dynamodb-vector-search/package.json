@@ -1,0 +1,21 @@
+{
+  "name": "bookshop-search",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts",
+    "seed": "node scripts/seed.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1178.0",
+    "@aws-sdk/client-dynamodb": "^3.1178.0",
+    "@aws-sdk/util-dynamodb": "^3.996.9"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}

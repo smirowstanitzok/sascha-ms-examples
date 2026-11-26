@@ -1,0 +1,88 @@
+# serverless.yml
+service: bookshop-search
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 512
+  timeout: 10
+  environment:
+    BOOKS_TABLE: !Ref BooksTable
+    BOOKS_INDEX: BookEmbeddingIndex
+    EMBEDDING_MODEL_ID: amazon.titan-embed-text-v2:0
+  iam:
+    role:
+      mode: perFunction # every function gets its own narrow role
+
+functions:
+  addBook:
+    handler: src/add-book.handler
+    events:
+      - httpApi: POST /books
+    iam:
+      role:
+        statements:
+          - Effect: Allow
+            Action: bedrock:InvokeModel
+            Resource: arn:aws:bedrock:${aws:region}::foundation-model/amazon.titan-embed-text-v2:0
+          - Effect: Allow
+            Action: dynamodb:PutItem
+            Resource: !GetAtt BooksTable.Arn
+
+  searchBooks:
+    handler: src/search-books.handler
+    events:
+      - httpApi: GET /search
+    iam:
+      role:
+        statements:
+          - Effect: Allow
+            Action: bedrock:InvokeModel
+            Resource: arn:aws:bedrock:${aws:region}::foundation-model/amazon.titan-embed-text-v2:0
+          # Separate statement without FGAC conditions – SearchVectors has no LeadingKeys
+          - Effect: Allow
+            Action: dynamodb:SearchVectors
+            Resource: !Join ['', [!GetAtt BooksTable.Arn, '/index/BookEmbeddingIndex']]
+
+resources:
+  Resources:
+    BooksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST # vector indexes require on-demand mode
+        AttributeDefinitions:
+          - AttributeName: isbn
+            AttributeType: S
+          - AttributeName: genre
+            AttributeType: S
+          - AttributeName: lang
+            AttributeType: S
+          - AttributeName: year
+            AttributeType: N
+          - AttributeName: price
+            AttributeType: N
+        KeySchema:
+          - AttributeName: isbn
+            KeyType: HASH
+        VectorIndexes:
+          - IndexName: BookEmbeddingIndex
+            VectorAttribute:
+              AttributeName: embedding
+            Dimensions: 512
+            DistanceFunction: COSINE
+            SearchSchema:
+              - AttributeName: genre
+                SearchSchemaElementType: HASH
+              - AttributeName: lang
+                SearchSchemaElementType: INLINE_FILTER
+              - AttributeName: year
+                SearchSchemaElementType: INLINE_FILTER
+              - AttributeName: price
+                SearchSchemaElementType: INLINE_FILTER
+            Projection:
+              ProjectionType: INCLUDE
+              NonKeyAttributes:
+                - title
+                - author
