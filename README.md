@@ -89,6 +89,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`lambda-layers-pdfkit`](./lambda-layers-pdfkit) | Serverless · Lambda · Lambda layers · Powertools · Serverless Framework · AWS CDK · TypeScript | [AWS Lambda layers: when they still pay off in 2026](https://sascha-ms.de/en/aws-lambda-layers) · [DE](https://sascha-ms.de/2026/3281-lambda-layers) |
 | [`durable-microvm-patch-check`](./durable-microvm-patch-check) | Serverless · Lambda durable functions · Lambda MicroVMs · AWS CDK · TypeScript | [Durable Functions MicroVMs: test AI code safely](https://sascha-ms.de/en/durable-functions-microvms) · [DE](https://sascha-ms.de/2026/4087-durable-functions-microvms) |
 | [`dynamodb-vector-search`](./dynamodb-vector-search) | Serverless · DynamoDB vector search · Lambda · Amazon Bedrock · Serverless Framework · AWS CDK · TypeScript | [DynamoDB Vector Search: Semantic Search with Lambda](https://sascha-ms.de/en/dynamodb-vector-search-lambda) · [DE](https://sascha-ms.de/2026/4102-dynamodb-vektorsuche-lambda) |
+| [`typescript-result-error-handling`](./typescript-result-error-handling) | TypeScript · Error handling · Result type · Lambda · Node.js test runner · Serverless Framework | [TypeScript error handling: Result types, not throw](https://sascha-ms.de/en/typescript-error-handling-result-type) · [DE](https://sascha-ms.de/2026/4128-typescript-fehlerbehandlung-result-typ) |
 
 ## How to use
 
