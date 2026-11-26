@@ -1,0 +1,25 @@
+# serverless.yml
+service: bike-rental-reservations
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 256
+  timeout: 10
+
+build:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+
+functions:
+  reserve:
+    handler: src/handler.handler
+    events:
+      - httpApi:
+          path: /reservations
+          method: post
