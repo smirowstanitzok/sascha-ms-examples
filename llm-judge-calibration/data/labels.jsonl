@@ -1,0 +1,24 @@
+{"id":"r01","question":"How much is an e-bike for two days?","answer":"An e-bike costs €35 per day, so €70 for two days. There is also a €200 deposit, which you get back when you return the bike.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r02","question":"Can I still cancel for free tomorrow morning? Pickup is tomorrow at 10 am.","answer":"Unfortunately not, free cancellation is only possible up to 24 hours before pickup. Now 50% of the daily price applies.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r03","question":"My son is 16. Can he rent a bike on his own?","answer":"At 16 he can't rent on his own, unfortunately. Just come in together with him, then he can rent the bike with you as his parent.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r04","question":"I'm an hour late. What happens now?","answer":"It clearly says so in the rules: return by 7 pm. You pay €5 for the hour.","labels":{"policy":"pass","tone":"fail"}}
+{"id":"r05","question":"Is there a discount if I rent for a week?","answer":"Sure, from one week on you get a 20% discount on the total price!","labels":{"policy":"fail","tone":"pass"}}
+{"id":"r06","question":"The battery of my e-bike is empty, I'm at the harbor.","answer":"Sorry to hear that! Please call our hotline, we will replace the bike right where you are within 2 hours.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r07","question":"Can I keep the bike until 9 pm?","answer":"No problem, as an exception you can keep it until 9 pm today at no extra charge.","labels":{"policy":"fail","tone":"pass"}}
+{"id":"r08","question":"How much is the deposit for a city bike?","answer":"€50.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r09","question":"I missed the cancellation deadline. Is there nothing you can do?","answer":"If you had read the terms, you would know the deadline is 24 hours. It stays at 50% of the daily price.","labels":{"policy":"pass","tone":"fail"}}
+{"id":"r10","question":"How much is a city bike per day?","answer":"A city bike costs €12 per day, the deposit is €50.","labels":{"policy":"fail","tone":"pass"}}
+{"id":"r11","question":"Do I need an ID?","answer":"Yes, please bring an ID. You can rent from the age of 18.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r12","question":"Do I have to bring the bike back myself after a breakdown?","answer":"No, just call the hotline. We come to you and replace the bike, it takes two hours at most.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r13","question":"Can I rent an e-bike without a deposit?","answer":"For regular customers we are happy to waive the deposit, just let us know at the counter.","labels":{"policy":"fail","tone":"pass"}}
+{"id":"r14","question":"I'll be 20 minutes late, is that a problem?","answer":"As I said, returns are until 7 pm. The started hour costs €5, there is nothing I can do.","labels":{"policy":"pass","tone":"fail"}}
+{"id":"r15","question":"When do I get the deposit back?","answer":"You get the deposit back as soon as you return the bike.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r16","question":"How much does it cost to cancel two days in advance?","answer":"Two days in advance, cancellation is free; the deadline only ends 24 hours before pickup.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r17","question":"Can my 17-year-old daughter rent with my ID?","answer":"Your ID alone is not enough, you need to be there as her parent. Then renting is no problem.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r18","question":"I want to keep the e-bike one more day. Is that possible?","answer":"Of course, your rental has been extended for free.","labels":{"policy":"fail","tone":"pass"}}
+{"id":"r19","question":"What are your opening hours?","answer":"Returns are possible until 7 pm.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r20","question":"Why is being late so expensive?","answer":"Your own fault if you come late. It's €5 per started hour.","labels":{"policy":"pass","tone":"fail"}}
+{"id":"r21","question":"How much is an e-bike for one day including the deposit?","answer":"For one day you pay €35 rent. You get the €200 deposit back when you return the bike.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r22","question":"Can I cancel for free if it rains?","answer":"If it rains, you can always cancel for free, even on the same day.","labels":{"policy":"fail","tone":"pass"}}
+{"id":"r23","question":"Can I pay by card?","answer":"I don't have any information on that, unfortunately. Please ask at the counter.","labels":{"policy":"pass","tone":"pass"}}
+{"id":"r24","question":"Do I get the deposit back if the bike is dirty?","answer":"Yes, the deposit is refunded when you return the bike.","labels":{"policy":"pass","tone":"pass"}}
