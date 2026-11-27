@@ -6,7 +6,6 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 
 | Example | Topic | Article |
 | --- | --- | --- |
-| [`serverless-cost-review`](./serverless-cost-review) | Serverless · Cost optimization · AWS Budgets · Cost Anomaly Detection · CloudWatch Logs · Lambda · Serverless Framework · TypeScript | [Reduce Serverless Costs: A Cost Review in 6 Steps](https://sascha-ms.de/en/reduce-serverless-costs) · [DE](https://sascha-ms.de/2026/4168-serverless-kosten-senken) |
 | [`api-portal-gap-scan`](./api-portal-gap-scan) | API governance · AWS API Portal · Shadow APIs · HTTP API · Lambda function URLs · SNS · Serverless Framework · TypeScript | [AWS API Portal: Find and Secure Shadow APIs](https://sascha-ms.de/en/aws-api-portal-shadow-apis) · [DE](https://sascha-ms.de/2026/4037-aws-api-portal-schatten-apis) |
 | [`waf-ai-security-mcp`](./waf-ai-security-mcp) | AI security · AWS WAF AI Security · Bedrock Guardrails · MCP · API Gateway · Lambda · AWS CDK · TypeScript | [AWS WAF AI Security: Protect MCP Servers with Guardrails](https://sascha-ms.de/en/aws-waf-ai-security-mcp-servers) · [DE](https://sascha-ms.de/2026/4021-aws-waf-ai-security-mcp-server) |
 | [`lambda-function-state-events`](./lambda-function-state-events) | Serverless · Lambda · EventBridge · DynamoDB · SNS · Serverless Framework · TypeScript | [Lambda function state events: deployments without polling](https://sascha-ms.de/en/lambda-function-state-events) · [DE](https://sascha-ms.de/2026/4006-lambda-function-state-events) |
@@ -93,6 +92,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`dynamodb-vector-search`](./dynamodb-vector-search) | Serverless · DynamoDB vector search · Lambda · Amazon Bedrock · Serverless Framework · AWS CDK · TypeScript | [DynamoDB Vector Search: Semantic Search with Lambda](https://sascha-ms.de/en/dynamodb-vector-search-lambda) · [DE](https://sascha-ms.de/2026/4102-dynamodb-vektorsuche-lambda) |
 | [`typescript-result-error-handling`](./typescript-result-error-handling) | TypeScript · Error handling · Result type · Lambda · Node.js test runner · Serverless Framework | [TypeScript error handling: Result types, not throw](https://sascha-ms.de/en/typescript-error-handling-result-type) · [DE](https://sascha-ms.de/2026/4128-typescript-fehlerbehandlung-result-typ) |
 | [`eventbridge-webhook-events`](./eventbridge-webhook-events) | Serverless · EventBridge webhook events · Standard Webhooks · Lambda · DynamoDB · AWS CDK · Serverless Framework · TypeScript | [EventBridge webhook events: webhooks without your own API](https://sascha-ms.de/en/eventbridge-webhook-events) · [DE](https://sascha-ms.de/2026/4139-eventbridge-webhook-events) |
+| [`lambda-power-tuning`](./lambda-power-tuning) | Serverless · Lambda Power Tuning · Lambda memory and cost · Step Functions · x86 vs. arm64 · AWS CDK · Serverless Framework · TypeScript | [Lambda Power Tuning: Find the Right Memory Size](https://sascha-ms.de/en/lambda-power-tuning) · [DE](https://sascha-ms.de/2026/4179-lambda-power-tuning) |
 
 ## How to use
 

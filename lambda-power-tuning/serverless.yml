@@ -1,0 +1,21 @@
+# serverless.yml
+service: bakery-export
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  stage: dev
+  memorySize: 1024
+  timeout: 30
+  logRetentionInDays: 14
+
+functions:
+  x86:
+    handler: src/handler.handler
+    name: bakery-export-x86-${sls:stage}
+    architecture: x86_64
+  arm:
+    handler: src/handler.handler
+    name: bakery-export-arm-${sls:stage}
+    architecture: arm64

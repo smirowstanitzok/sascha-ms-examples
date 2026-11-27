@@ -1,0 +1,10 @@
+{
+  "lambdaARN": "arn:aws:lambda:eu-central-1:123456789012:function:bakery-export-arm-dev",
+  "powerValues": [128, 256, 512, 1024, 1536, 2048, 3008],
+  "num": 30,
+  "payload": { "days": 90 },
+  "parallelInvocation": true,
+  "strategy": "balanced",
+  "balancedWeight": 0.6,
+  "includeOutputResults": true
+}
