@@ -1,0 +1,97 @@
+# serverless.yml
+service: bike-rental
+
+frameworkVersion: '4'
+
+# Recipient for budget and anomaly emails, override e.g. with --param="costEmail=..."
+params:
+  default:
+    costEmail: costs@example.com
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  # arm64 (Graviton) has a lower price per GB-second than x86_64
+  architecture: arm64
+  # Starting value, measure again with Lambda Power Tuning afterwards
+  memorySize: 512
+  timeout: 10
+  # Without this line, logs are kept forever
+  logRetentionInDays: 14
+  logs:
+    lambda:
+      logFormat: JSON
+      applicationLogLevel: info
+      systemLogLevel: warn
+  # Tags end up on every resource in the stack that supports tags
+  stackTags:
+    project: bike-rental
+    stage: ${sls:stage}
+  httpApi:
+    cors: true
+
+functions:
+  availability:
+    handler: src/availability.handler
+    events:
+      - httpApi:
+          path: /stations
+          method: get
+
+resources:
+  Conditions:
+    IsProd:
+      Fn::Equals: ['${sls:stage}', 'prod']
+  Resources:
+    # Create the budget only once per account, so only in prod
+    ProjectBudget:
+      Type: AWS::Budgets::Budget
+      Condition: IsProd
+      Properties:
+        Budget:
+          BudgetName: bike-rental-monthly
+          BudgetType: COST
+          TimeUnit: MONTHLY
+          BudgetLimit:
+            Amount: 50
+            Unit: USD
+          CostFilters:
+            TagKeyValue:
+              - 'user:project$bike-rental'
+        NotificationsWithSubscribers:
+          - Notification:
+              NotificationType: FORECASTED
+              ComparisonOperator: GREATER_THAN
+              Threshold: 100
+              ThresholdType: PERCENTAGE
+            Subscribers:
+              - SubscriptionType: EMAIL
+                Address: ${param:costEmail}
+          - Notification:
+              NotificationType: ACTUAL
+              ComparisonOperator: GREATER_THAN
+              Threshold: 80
+              ThresholdType: PERCENTAGE
+            Subscribers:
+              - SubscriptionType: EMAIL
+                Address: ${param:costEmail}
+    CostAnomalyMonitor:
+      Type: AWS::CE::AnomalyMonitor
+      Condition: IsProd
+      Properties:
+        MonitorName: bike-rental-anomalies
+        MonitorType: CUSTOM
+        MonitorSpecification: '{"Tags":{"Key":"project","Values":["bike-rental"]}}'
+    CostAnomalySubscription:
+      Type: AWS::CE::AnomalySubscription
+      Condition: IsProd
+      Properties:
+        SubscriptionName: bike-rental-anomaly-email
+        Frequency: DAILY
+        MonitorArnList:
+          - Ref: CostAnomalyMonitor
+        Subscribers:
+          - Type: EMAIL
+            Address: ${param:costEmail}
+        ThresholdExpression: '{"Dimensions":{"Key":"ANOMALY_TOTAL_IMPACT_ABSOLUTE","MatchOptions":["GREATER_THAN_OR_EQUAL"],"Values":["10"]}}'
