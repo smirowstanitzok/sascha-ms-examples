@@ -1,0 +1,15 @@
+{
+  "name": "bikerental-problem-details",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.2"
+  }
+}

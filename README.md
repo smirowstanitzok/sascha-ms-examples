@@ -94,6 +94,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`eventbridge-webhook-events`](./eventbridge-webhook-events) | Serverless · EventBridge webhook events · Standard Webhooks · Lambda · DynamoDB · AWS CDK · Serverless Framework · TypeScript | [EventBridge webhook events: webhooks without your own API](https://sascha-ms.de/en/eventbridge-webhook-events) · [DE](https://sascha-ms.de/2026/4139-eventbridge-webhook-events) |
 | [`lambda-power-tuning`](./lambda-power-tuning) | Serverless · Lambda Power Tuning · Lambda memory and cost · Step Functions · x86 vs. arm64 · AWS CDK · Serverless Framework · TypeScript | [Lambda Power Tuning: Find the Right Memory Size](https://sascha-ms.de/en/lambda-power-tuning) · [DE](https://sascha-ms.de/2026/4179-lambda-power-tuning) |
 | [`llm-judge-calibration`](./llm-judge-calibration) | AI · LLM as a judge · Evals · Cohen's kappa · Claude API · Node.js test runner · TypeScript | [LLM as a judge: calibrate your grader with TypeScript](https://sascha-ms.de/en/llm-as-a-judge-calibration) · [DE](https://sascha-ms.de/2026/4213-llm-as-a-judge-kalibrieren) |
+| [`rfc9457-problem-details`](./rfc9457-problem-details) | API design · RFC 9457 problem details · application/problem+json · HTTP API · Lambda · Serverless Framework · Node.js test runner · TypeScript | [Problem Details for HTTP APIs: RFC 9457 with Lambda](https://sascha-ms.de/en/problem-details-http-apis-rfc-9457-lambda) · [DE](https://sascha-ms.de/2026/4226-rfc-9457-problem-details-lambda) |
 
 ## How to use
 

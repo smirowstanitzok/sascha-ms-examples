@@ -1,0 +1,38 @@
+# serverless.yml
+service: bikerental-problem-details
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+  region: eu-central-1
+  memorySize: 256
+  timeout: 10
+  environment:
+    # Use your own domain that stays stable (with trailing slash)
+    PROBLEM_BASE_URL: https://api.bikerental.example/problems/
+
+build:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+
+functions:
+  reserve:
+    handler: src/handler.reserve
+    events:
+      - httpApi:
+          path: /reservations
+          method: post
+  problemDocs:
+    handler: src/docs.problemDocs
+    events:
+      - httpApi:
+          path: /problems/{slug}
+          method: get
+  notFound:
+    handler: src/not-found.notFound
+    events:
+      - httpApi: '*'
