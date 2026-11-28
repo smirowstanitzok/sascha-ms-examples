@@ -17,6 +17,6 @@
     "constructs": "^10.4.2",
     "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.0"
   }
 }
