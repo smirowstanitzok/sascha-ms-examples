@@ -10,7 +10,7 @@
     "worker": "tsx src/main.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-sfn": "3.1169.0",
+    "@aws-sdk/client-sfn": "3.1179.0",
     "@smithy/node-http-handler": "4.14.2"
   },
   "devDependencies": {
