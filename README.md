@@ -97,6 +97,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`rfc9457-problem-details`](./rfc9457-problem-details) | API design · RFC 9457 problem details · application/problem+json · HTTP API · Lambda · Serverless Framework · Node.js test runner · TypeScript | [Problem Details for HTTP APIs: RFC 9457 with Lambda](https://sascha-ms.de/en/problem-details-http-apis-rfc-9457-lambda) · [DE](https://sascha-ms.de/2026/4226-rfc-9457-problem-details-lambda) |
 | [`change-freeze-gate`](./change-freeze-gate) | DevOps · Change freeze · Deployment gate · GitHub Actions · Serverless Framework · Node.js test runner · TypeScript | [Year-end change freeze: checklist and CI gate](https://sascha-ms.de/en/year-end-change-freeze-checklist-ci-gate) · [DE](https://sascha-ms.de/2026/4241-change-freeze-jahresende) |
 | [`pairwise-llm-judge`](./pairwise-llm-judge) | AI · LLM as a judge · Pairwise evaluation · Position bias · Claude API · Node.js test runner · TypeScript | [Pairwise LLM judge: detect and measure position bias](https://sascha-ms.de/en/pairwise-llm-judge-position-bias) · [DE](https://sascha-ms.de/2026/4267-paarweiser-llm-judge) |
+| [`dynamodb-pagination-cursor`](./dynamodb-pagination-cursor) | Serverless · DynamoDB · Pagination · Signed cursor (HMAC) · Lambda · Serverless Framework · Vitest · TypeScript | [DynamoDB pagination: build a cursor API with Lambda](https://sascha-ms.de/en/dynamodb-pagination-cursor-api-lambda) · [DE](https://sascha-ms.de/2026/4278-dynamodb-pagination-cursor-lambda) |
 
 ## How to use
 

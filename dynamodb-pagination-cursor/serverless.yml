@@ -1,0 +1,46 @@
+# serverless.yml
+service: bike-rentals-pagination
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  architecture: arm64
+  memorySize: 512
+  timeout: 10
+  environment:
+    TABLE_NAME: !Ref RentalsTable
+    # SecureString from Parameter Store, resolved at deploy time
+    CURSOR_SECRET: ${ssm:/bike-rentals/cursor-secret}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: dynamodb:Query
+          Resource: !GetAtt RentalsTable.Arn
+
+functions:
+  listRentals:
+    handler: src/handler.handler
+    events:
+      - httpApi:
+          method: GET
+          path: /stations/{stationId}/rentals
+
+resources:
+  Resources:
+    RentalsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
