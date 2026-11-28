@@ -1,0 +1,8 @@
+{"id":"p01","question":"How much is an e-bike for one day?","baseline":"An e-bike costs 35 euros per day, including helmet and lock.","candidate":"An e-bike costs 35 euros per day. Helmet and lock are included, please bring your ID."}
+{"id":"p02","question":"Can I keep the bike one more day?","baseline":"Yes, as an exception we extend it for free.","candidate":"Sure, call us before 6 pm. The extra day costs 20 euros."}
+{"id":"p03","question":"Do I need a deposit?","baseline":"Yes, we take a 100 euro deposit that you get back when you return the bike.","candidate":"Yes, we take a deposit. You get it back when you return the bike."}
+{"id":"p04","question":"Do you have child seats?","baseline":"Yes, we rent child seats for 5 euros per day.","candidate":"Yes, child seats are 5 euros per day while stocks last."}
+{"id":"p05","question":"How long are you open on Saturdays?","baseline":"On Saturdays we are here for you from 9 am to 4 pm.","candidate":"On Saturdays we are open from 9 am to 4 pm."}
+{"id":"p06","question":"What happens if I get a flat tyre?","baseline":"Push the bike back, that is your problem.","candidate":"Call our breakdown service. We bring a replacement bike for 15 euros, helmet included."}
+{"id":"p07","question":"Can my dog ride in the trailer?","baseline":"Yes, our trailers are approved for dogs up to 25 kg.","candidate":"Yes, dogs up to 25 kg can ride in the trailer."}
+{"id":"p08","question":"Can I book online?","baseline":"Yes, on our website. Booking is free of charge and holds for 30 minutes.","candidate":"Yes, on our website. Booking costs nothing and keeps the bike reserved for you for 30 minutes."}

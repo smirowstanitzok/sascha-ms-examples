@@ -96,6 +96,7 @@ Every folder is a small, self-contained project with its own `README.md`, `packa
 | [`llm-judge-calibration`](./llm-judge-calibration) | AI · LLM as a judge · Evals · Cohen's kappa · Claude API · Node.js test runner · TypeScript | [LLM as a judge: calibrate your grader with TypeScript](https://sascha-ms.de/en/llm-as-a-judge-calibration) · [DE](https://sascha-ms.de/2026/4213-llm-as-a-judge-kalibrieren) |
 | [`rfc9457-problem-details`](./rfc9457-problem-details) | API design · RFC 9457 problem details · application/problem+json · HTTP API · Lambda · Serverless Framework · Node.js test runner · TypeScript | [Problem Details for HTTP APIs: RFC 9457 with Lambda](https://sascha-ms.de/en/problem-details-http-apis-rfc-9457-lambda) · [DE](https://sascha-ms.de/2026/4226-rfc-9457-problem-details-lambda) |
 | [`change-freeze-gate`](./change-freeze-gate) | DevOps · Change freeze · Deployment gate · GitHub Actions · Serverless Framework · Node.js test runner · TypeScript | [Year-end change freeze: checklist and CI gate](https://sascha-ms.de/en/year-end-change-freeze-checklist-ci-gate) · [DE](https://sascha-ms.de/2026/4241-change-freeze-jahresende) |
+| [`pairwise-llm-judge`](./pairwise-llm-judge) | AI · LLM as a judge · Pairwise evaluation · Position bias · Claude API · Node.js test runner · TypeScript | [Pairwise LLM judge: detect and measure position bias](https://sascha-ms.de/en/pairwise-llm-judge-position-bias) · [DE](https://sascha-ms.de/2026/4267-paarweiser-llm-judge) |
 
 ## How to use
 
