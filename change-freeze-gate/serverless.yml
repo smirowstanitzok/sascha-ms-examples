@@ -1,0 +1,17 @@
+# serverless.yml
+service: bike-rental
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: eu-central-1
+  stage: ${opt:stage, 'dev'}
+
+functions:
+  status:
+    handler: src/status.handler
+    events:
+      - httpApi:
+          path: /status
+          method: get

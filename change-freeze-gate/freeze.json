@@ -1,0 +1,10 @@
+{
+  "windows": [
+    {
+      "name": "Year end 2026/27",
+      "start": "2026-12-21T00:00:00+01:00",
+      "end": "2027-01-04T09:00:00+01:00",
+      "allowedReasons": ["hotfix", "security"]
+    }
+  ]
+}

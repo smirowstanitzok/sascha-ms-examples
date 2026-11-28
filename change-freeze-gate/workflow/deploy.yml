@@ -1,0 +1,60 @@
+# .github/workflows/deploy.yml (copy this file there)
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      override_reason:
+        description: "Exception during change freeze"
+        type: choice
+        options: [none, hotfix, security]
+        default: none
+      override_note:
+        description: "Justification (at least 20 characters)"
+        type: string
+        default: ""
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  freeze-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Check change freeze
+        run: npm run freeze-check
+        env:
+          OVERRIDE_REASON: ${{ inputs.override_reason }}
+          OVERRIDE_NOTE: ${{ inputs.override_note }}
+
+  deploy:
+    needs: freeze-check
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: eu-central-1
+      - name: Deploy with the Serverless Framework
+        run: npx serverless deploy --stage prod
+        env:
+          SERVERLESS_LICENSE_KEY: ${{ secrets.SERVERLESS_LICENSE_KEY }}
