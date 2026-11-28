@@ -14,7 +14,7 @@
     "@smithy/node-http-handler": "4.14.2"
   },
   "devDependencies": {
-    "@types/node": "26.6.6",
+    "@types/node": "26.6.11",
     "aws-cdk": "2.1148.1",
     "aws-cdk-lib": "2.277.0",
     "aws-sdk-client-mock": "4.1.0",
